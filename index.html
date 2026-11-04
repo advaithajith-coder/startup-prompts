@@ -1,0 +1,2470 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Startup Intelligence — Prompt Library</title>
+<meta name="description" content="52 sections and 69 AI prompts that take a startup idea from problem framing to a go / no-go verdict, with India-specific market, legal and funding research.">
+<style>
+  :root {
+    --bg: #0F0F10;
+    --surface: #18181B;
+    --surface2: #1E1E22;
+    --surface3: #26262C;
+    --border: rgba(255,255,255,0.07);
+    --border2: rgba(255,255,255,0.12);
+    --text: #E8E8EC;
+    --text2: #9A9AAF;
+    --text3: #5A5A72;
+    --accent: #7C6FE0;
+    --accent2: #A898FF;
+    --green: #22C55E;
+    --amber: #F59E0B;
+    --coral: #EF4444;
+    --teal: #14B8A6;
+    --pink: #EC4899;
+    --radius: 10px;
+    --sidebar-w: 270px;
+  }
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body { height: 100%; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: var(--bg); color: var(--text); font-size: 14px; }
+
+  /* ── LAYOUT ────────────────────────────────── */
+  .app { display: flex; height: 100vh; overflow: hidden; }
+  .sidebar { width: var(--sidebar-w); min-width: var(--sidebar-w); background: var(--surface); border-right: 1px solid var(--border); display: flex; flex-direction: column; overflow: hidden; }
+  .main { flex: 1; display: flex; flex-direction: column; overflow: hidden; }
+  .content { flex: 1; overflow-y: auto; padding: 28px 32px; }
+
+  /* ── SIDEBAR ───────────────────────────────── */
+  .sidebar-header { padding: 18px 16px 14px; border-bottom: 1px solid var(--border); }
+  .sidebar-logo { font-size: 13px; font-weight: 600; color: var(--text); letter-spacing: -.01em; display: flex; align-items: center; gap: 8px; }
+  .sidebar-logo span { background: linear-gradient(135deg, var(--accent2), #C084FC); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+  .sidebar-stats { display: flex; gap: 6px; margin-top: 10px; }
+  .s-stat { font-size: 10px; padding: 2px 7px; border-radius: 20px; background: var(--surface3); color: var(--text2); }
+  .s-stat.new { background: rgba(124,111,224,0.2); color: var(--accent2); }
+
+  .sidebar-search { padding: 10px 12px; border-bottom: 1px solid var(--border); }
+  .sidebar-search input { width: 100%; background: var(--surface2); border: 1px solid var(--border2); border-radius: 7px; padding: 7px 10px; color: var(--text); font-size: 12px; outline: none; }
+  .sidebar-search input::placeholder { color: var(--text3); }
+  .sidebar-search input:focus { border-color: var(--accent); }
+
+  .sidebar-nav { flex: 1; overflow-y: auto; padding: 8px 0; }
+  .sidebar-nav::-webkit-scrollbar { width: 3px; }
+  .sidebar-nav::-webkit-scrollbar-thumb { background: var(--surface3); border-radius: 3px; }
+
+  .pillar-group { margin-bottom: 2px; }
+  .pillar-toggle { display: flex; align-items: center; gap: 8px; padding: 8px 14px; cursor: pointer; color: var(--text2); font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: .07em; transition: color .15s; user-select: none; }
+  .pillar-toggle:hover { color: var(--text); }
+  .pillar-dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
+  .pillar-toggle .chv { margin-left: auto; font-size: 9px; transition: transform .2s; }
+  .pillar-toggle.open .chv { transform: rotate(90deg); }
+
+  .section-link { display: flex; align-items: center; gap: 8px; padding: 7px 14px 7px 30px; cursor: pointer; color: var(--text2); font-size: 12px; transition: all .15s; border-left: 2px solid transparent; }
+  .section-link:hover { color: var(--text); background: var(--surface2); }
+  .section-link.active { color: var(--text); background: var(--surface2); }
+  .section-link .s-code { font-size: 10px; font-weight: 600; opacity: .6; min-width: 24px; }
+  .section-link .s-name { flex: 1; line-height: 1.3; }
+  .section-link .s-new { width: 6px; height: 6px; border-radius: 50%; background: var(--accent2); flex-shrink: 0; }
+
+  /* ── HEADER ────────────────────────────────── */
+  .top-header { padding: 16px 32px; border-bottom: 1px solid var(--border); display: flex; align-items: center; gap: 16px; background: var(--surface); flex-shrink: 0; }
+  .header-title { font-size: 15px; font-weight: 600; flex: 1; }
+  .header-title small { font-size: 11px; font-weight: 400; color: var(--text2); margin-left: 8px; }
+  .btn { display: inline-flex; align-items: center; gap: 6px; padding: 8px 14px; border-radius: 8px; font-size: 12px; font-weight: 500; cursor: pointer; border: none; transition: all .15s; }
+  .btn-primary { background: var(--accent); color: #fff; }
+  .btn-primary:hover { background: #6357CC; }
+  .btn-ghost { background: var(--surface2); color: var(--text2); border: 1px solid var(--border2); }
+  .btn-ghost:hover { color: var(--text); background: var(--surface3); }
+
+  /* ── SECTION DETAIL ────────────────────────── */
+  .section-hero { margin-bottom: 28px; }
+  .section-hero-top { display: flex; align-items: flex-start; gap: 12px; margin-bottom: 10px; flex-wrap: wrap; }
+  .section-code-badge { font-size: 12px; font-weight: 700; padding: 4px 10px; border-radius: 7px; letter-spacing: .04em; }
+  .section-big-title { font-size: 22px; font-weight: 700; color: var(--text); letter-spacing: -.02em; }
+  .section-desc { font-size: 13px; color: var(--text2); line-height: 1.7; max-width: 680px; margin-top: 8px; }
+  .section-meta { display: flex; gap: 8px; margin-top: 14px; flex-wrap: wrap; }
+  .meta-chip { display: flex; align-items: center; gap: 5px; padding: 4px 10px; border-radius: 20px; font-size: 11px; border: 1px solid var(--border2); color: var(--text2); }
+  .meta-chip svg { width: 11px; height: 11px; }
+  .meta-chip.order { border-color: rgba(124,111,224,0.4); color: var(--accent2); }
+  .meta-chip.dep { border-color: rgba(20,184,166,0.4); color: var(--teal); }
+  .meta-chip.warn { border-color: rgba(245,158,11,0.4); color: var(--amber); }
+
+  .badge { display: inline-flex; align-items: center; gap: 4px; font-size: 10px; font-weight: 600; padding: 3px 8px; border-radius: 20px; letter-spacing: .04em; text-transform: uppercase; }
+  .badge-new { background: rgba(124,111,224,0.2); color: var(--accent2); }
+  .badge-unique { background: rgba(34,197,94,0.15); color: var(--green); }
+  .badge-india { background: rgba(245,158,11,0.15); color: var(--amber); }
+  .badge-standard { background: var(--surface3); color: var(--text2); }
+  .badge-prompt { background: rgba(20,184,166,0.15); color: var(--teal); }
+
+  /* ── PROMPT CARDS ──────────────────────────── */
+  .prompts-header { font-size: 11px; font-weight: 600; color: var(--text3); text-transform: uppercase; letter-spacing: .08em; margin-bottom: 14px; display: flex; align-items: center; justify-content: space-between; }
+  .prompt-card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); margin-bottom: 14px; overflow: hidden; }
+  .prompt-card-head { display: flex; align-items: center; gap: 10px; padding: 13px 16px; cursor: pointer; border-bottom: 1px solid transparent; transition: background .15s; }
+  .prompt-card-head:hover { background: var(--surface2); }
+  .prompt-card-head.open { border-bottom-color: var(--border); }
+  .prompt-num { font-size: 10px; font-weight: 700; width: 22px; height: 22px; border-radius: 6px; display: flex; align-items: center; justify-content: center; background: var(--surface3); color: var(--text2); flex-shrink: 0; }
+  .prompt-title { font-size: 13px; font-weight: 600; color: var(--text); flex: 1; }
+  .prompt-title small { font-weight: 400; color: var(--text3); margin-left: 6px; }
+  .copy-btn { display: inline-flex; align-items: center; gap: 4px; padding: 4px 10px; border-radius: 6px; font-size: 11px; background: var(--surface3); color: var(--text2); border: none; cursor: pointer; transition: all .15s; }
+  .copy-btn:hover { background: var(--accent); color: #fff; }
+  .copy-btn.copied { background: rgba(34,197,94,0.2); color: var(--green); }
+  .prompt-body { padding: 16px; }
+  .prompt-text { background: var(--bg); border: 1px solid var(--border); border-radius: 8px; padding: 16px; font-family: 'SF Mono', 'Fira Code', 'Cascadia Code', monospace; font-size: 12px; line-height: 1.8; color: #C9C9E0; white-space: pre-wrap; word-break: break-word; }
+
+  /* ── EMPTY STATE ───────────────────────────── */
+  .empty { display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100%; gap: 12px; color: var(--text3); }
+  .empty-icon { font-size: 40px; opacity: .3; }
+  .empty-title { font-size: 16px; font-weight: 500; color: var(--text2); }
+
+  /* ── MODAL ─────────────────────────────────── */
+  .modal-backdrop { position: fixed; inset: 0; background: rgba(0,0,0,0.7); display: flex; align-items: center; justify-content: center; z-index: 100; padding: 20px; }
+  .modal { background: var(--surface); border: 1px solid var(--border2); border-radius: 14px; width: 100%; max-width: 600px; max-height: 88vh; overflow-y: auto; }
+  .modal-header { display: flex; align-items: center; padding: 20px 24px 16px; border-bottom: 1px solid var(--border); }
+  .modal-title { font-size: 16px; font-weight: 600; flex: 1; }
+  .modal-close { background: var(--surface3); border: none; color: var(--text2); width: 28px; height: 28px; border-radius: 6px; cursor: pointer; font-size: 16px; display: flex; align-items: center; justify-content: center; }
+  .modal-body { padding: 20px 24px 24px; display: flex; flex-direction: column; gap: 16px; }
+  .form-group { display: flex; flex-direction: column; gap: 6px; }
+  .form-label { font-size: 12px; font-weight: 500; color: var(--text2); }
+  .form-input, .form-select, .form-textarea { background: var(--surface2); border: 1px solid var(--border2); border-radius: 8px; padding: 10px 12px; color: var(--text); font-size: 13px; font-family: inherit; outline: none; transition: border .15s; }
+  .form-input:focus, .form-select:focus, .form-textarea:focus { border-color: var(--accent); }
+  .form-textarea { min-height: 140px; resize: vertical; font-family: 'SF Mono', monospace; font-size: 12px; line-height: 1.7; }
+  .form-select option { background: var(--surface2); }
+  .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+
+  /* ── SCROLLBAR ─────────────────────────────── */
+  .content::-webkit-scrollbar { width: 4px; }
+  .content::-webkit-scrollbar-thumb { background: var(--surface3); border-radius: 4px; }
+
+  .divider { height: 1px; background: var(--border); margin: 24px 0; }
+
+  .hidden { display: none !important; }
+
+  /* Execution order timeline */
+  .exec-timeline { display: flex; align-items: center; gap: 6px; padding: 10px 14px; background: var(--surface); border: 1px solid var(--border); border-radius: 8px; margin-bottom: 24px; overflow-x: auto; }
+  .exec-step { display: flex; align-items: center; gap: 4px; font-size: 10px; color: var(--text3); white-space: nowrap; }
+  .exec-step.current { color: var(--accent2); font-weight: 600; }
+  .exec-arrow { color: var(--text3); font-size: 10px; }
+
+  .menu-btn { display: none; }
+  .sidebar-scrim { display: none; }
+
+  /* ── PHONES & SMALL TABLETS ────────────────── */
+  @media (max-width: 768px) {
+    .sidebar { position: fixed; top: 0; left: 0; bottom: 0; z-index: 50; width: 84vw; max-width: 320px; min-width: 0; transform: translateX(-100%); transition: transform .2s ease; }
+    .app.nav-open .sidebar { transform: translateX(0); }
+    .app.nav-open .sidebar-scrim { display: block; position: fixed; inset: 0; background: rgba(0,0,0,0.55); z-index: 40; }
+    .menu-btn { display: inline-flex; }
+    .top-header { padding: 12px 14px; gap: 8px; flex-wrap: wrap; }
+    .header-title { font-size: 14px; min-width: 0; }
+    .header-title small { display: block; margin-left: 0; margin-top: 2px; }
+    .btn { padding: 7px 10px; }
+    .content { padding: 18px 14px; }
+    .section-big-title { font-size: 18px; }
+    .prompt-card-head { flex-wrap: wrap; }
+    .prompt-text { padding: 12px; font-size: 11.5px; }
+    .form-row { grid-template-columns: 1fr; }
+    .modal-body { padding: 16px; }
+  }
+
+  .progressive-banner { background: rgba(245,158,11,0.08); border: 1px solid rgba(245,158,11,0.25); border-radius: 8px; padding: 10px 14px; margin-bottom: 20px; display: flex; align-items: flex-start; gap: 8px; font-size: 12px; color: #FCD34D; line-height: 1.5; }
+</style>
+</head>
+<body>
+<div class="app" id="app">
+  <div class="sidebar-scrim" onclick="setNav(false)"></div>
+
+  <!-- SIDEBAR -->
+  <aside class="sidebar">
+    <div class="sidebar-header">
+      <div class="sidebar-logo">🚀 <span>Startup Intelligence</span></div>
+      <div class="sidebar-stats">
+        <span class="s-stat">52 sections</span>
+        <span class="s-stat">8 pillars</span>
+        <span class="s-stat new">+2 new</span>
+      </div>
+    </div>
+    <div class="sidebar-search">
+      <input type="text" id="searchInput" placeholder="Search sections…" oninput="filterSections(this.value)">
+    </div>
+    <nav class="sidebar-nav" id="sidebarNav"></nav>
+  </aside>
+
+  <!-- MAIN -->
+  <div class="main">
+    <header class="top-header">
+      <button class="btn btn-ghost menu-btn" onclick="setNav(true)" aria-label="Open section list">☰</button>
+      <div class="header-title" id="headerTitle">Select a section <small>to view its prompts</small></div>
+      <button class="btn btn-ghost" onclick="exportAll()">⬇ Export All</button>
+      <button class="btn btn-primary" onclick="openAddModal()">+ Add Section</button>
+    </header>
+    <div class="content" id="mainContent">
+      <div class="empty">
+        <div class="empty-icon">📋</div>
+        <div class="empty-title">Select a section from the sidebar</div>
+        <div style="font-size:12px;">52 sections · 8 pillars · 69 prompts</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ADD MODAL -->
+<div class="modal-backdrop hidden" id="addModal">
+  <div class="modal">
+    <div class="modal-header">
+      <div class="modal-title">Add New Section / Prompt<div style="font-size:11px;font-weight:400;color:var(--text2);margin-top:4px;">Saved in this browser only. Use “Export All” to keep a copy.</div></div>
+      <button class="modal-close" onclick="closeAddModal()">✕</button>
+    </div>
+    <div class="modal-body">
+      <div class="form-row">
+        <div class="form-group">
+          <label class="form-label">Pillar</label>
+          <select class="form-select" id="addPillar"></select>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Section Code</label>
+          <input class="form-input" id="addCode" placeholder="e.g. A9, B7, X1">
+        </div>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Section Title</label>
+        <input class="form-input" id="addTitle" placeholder="e.g. Community Building Strategy">
+      </div>
+      <div class="form-group">
+        <label class="form-label">Section Description</label>
+        <input class="form-input" id="addDesc" placeholder="One-line description of what this section covers">
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label class="form-label">Badge Type</label>
+          <select class="form-select" id="addBadge">
+            <option value="standard">Standard</option>
+            <option value="unique">Unique</option>
+            <option value="india">India</option>
+            <option value="new">New Addition</option>
+            <option value="prompt">AI Prompt</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Execution Order</label>
+          <input class="form-input" id="addOrder" type="number" placeholder="e.g. 15">
+        </div>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Dependencies (comma separated)</label>
+        <input class="form-input" id="addDeps" placeholder="e.g. context.md, A3, B1">
+      </div>
+      <div class="form-group">
+        <label class="form-label">Needs progressive.md?</label>
+        <select class="form-select" id="addProgressive">
+          <option value="false">No — only context.md</option>
+          <option value="true">Yes — reads all prior research</option>
+        </select>
+      </div>
+      <div class="divider" style="margin:4px 0"></div>
+      <div style="font-size:12px;font-weight:600;color:var(--text2);margin-bottom:6px;">Prompt</div>
+      <div class="form-group">
+        <label class="form-label">Prompt Title</label>
+        <input class="form-input" id="addPromptTitle" placeholder="e.g. Core Analysis">
+      </div>
+      <div class="form-group">
+        <label class="form-label">Prompt Text</label>
+        <textarea class="form-textarea" id="addPromptText" placeholder="Write the full prompt here. Use {{context.md}} and {{progressive.md}} as placeholders for file references."></textarea>
+      </div>
+      <button class="btn btn-primary" style="width:100%;justify-content:center" onclick="saveNewSection()">Save Section</button>
+    </div>
+  </div>
+</div>
+
+<script>
+// ── DATA ───────────────────────────────────────────────────────────────────
+
+const PILLARS = [
+  { id:"P0", code:"P0", name:"Idea Intake & Problem Framing", color:"#7C6FE0", short:"Phase 0" },
+  { id:"PA", code:"A", name:"Market Intelligence", color:"#3B82F6", short:"Pillar A" },
+  { id:"PB", code:"B", name:"Business Model & Financials", color:"#22C55E", short:"Pillar B" },
+  { id:"PC", code:"C", name:"Execution & Growth", color:"#F59E0B", short:"Pillar C" },
+  { id:"PD", code:"D", name:"India Infrastructure", color:"#EF4444", short:"Pillar D" },
+  { id:"PE", code:"E", name:"Strategic Defense", color:"#EC4899", short:"Pillar E" },
+  { id:"PF", code:"F", name:"Founder Intelligence & Action", color:"#14B8A6", short:"Pillar F" },
+  { id:"PG", code:"G", name:"Consulting-Grade Prompts", color:"#8B5CF6", short:"Pillar G" },
+];
+
+function ctx() { return `Read context.md carefully before responding. It contains the founder's name, startup idea, target customer, location, budget, stage, and team.`; }
+function prog() { return `Read context.md AND progressive.md. progressive.md contains all research outputs generated so far — use it to avoid repeating work and to connect findings across sections.`; }
+
+const SECTIONS = [
+// ── PHASE 0 ──────────────────────────────────────────────────────────────
+{
+  pillar:"P0", code:"P1", title:"Problem Statement Canvas", badge:"new",
+  execOrder:1, deps:["context.md"], needsProgressive:false,
+  desc:"Lock the problem definition before any market research begins. The foundation everything else is built on.",
+  prompts:[
+    { id:"P1.1", title:"Core Problem Articulation",
+      text:`You are a seasoned startup advisor who has reviewed over 500 founder pitches. Your job is to force radical clarity on the problem being solved before any research is run.
+
+${ctx()}
+
+Task: Write a precise problem statement using this exact structure:
+"[Customer segment] currently struggle with [specific pain] when [triggering situation], which results in [measurable negative outcome]. Today they solve this by [current workaround], which fails because [specific failure mode]."
+
+Then answer each of the following:
+1. Is this a VITAMIN (nice-to-have), PAINKILLER (urgent need), or SURGERY (unavoidable necessity)? Score it 1–10 on urgency.
+2. Frequency of this pain: Daily / Weekly / Monthly / Rarely
+3. What does the customer LOSE if this problem is NOT solved? (Time / Money / Opportunity / Relationships — quantify if possible)
+4. Emotional intensity: Low / Medium / High — state why
+
+Output Format:
+---
+PROBLEM STATEMENT: [one sentence, fill the template above]
+PAIN TYPE: [Vitamin / Painkiller / Surgery]
+URGENCY SCORE: [X/10] — reason in one line
+FREQUENCY: [Daily/Weekly/Monthly]
+COST OF INACTION: [quantified estimate]
+EMOTIONAL INTENSITY: [Low/Medium/High] — one-line reason
+---` },
+    { id:"P1.2", title:"Current Workaround & Substitute Map",
+      text:`You are a user researcher who specialises in substitute behaviour — understanding what people do RIGHT NOW when a good solution does not yet exist.
+
+${ctx()}
+
+For the startup idea described, map the complete substitute landscape:
+
+1. List every method the target customer currently uses to handle this problem (minimum 5 workarounds).
+2. For each workaround: cost (time + money), what it does well, what it fails at, who uses it.
+3. Identify the GOOD ENOUGH TRAP: Is there a workaround that satisfies 70% of the need at low cost? If yes, this is the biggest adoption risk — call it out explicitly.
+4. Identify the SWITCHING TRIGGER: What specific event or threshold makes someone abandon their current workaround and pay for a proper solution?
+
+Output as a Markdown table followed by:
+- Good enough trap: [Y/N] — explanation
+- Switching trigger: [specific event description]
+- Key insight for product design: [one paragraph]` },
+    { id:"P1.3", title:"Founder-Problem Fit Memo",
+      text:`You are a seed-stage investor doing a first-pass filter on founder-market fit. You are not assessing the market — only whether this specific founder is the right person to solve this problem.
+
+${ctx()}
+
+Assess the following five dimensions:
+
+1. ORIGIN CLARITY (1–5): Does the founder have lived experience with this problem?
+   5 = They personally suffered this pain and lost money/time because of it
+   3 = They observed it closely in a professional context
+   1 = They read about it or heard it secondhand
+
+2. INSIGHT EDGE: What does this founder understand about this problem that someone who just Googled it would NOT know?
+
+3. NETWORK ACCESS: Does the founder already personally know 10+ people who have this problem? If yes, describe the access.
+
+4. CREDIBILITY SIGNAL: What would make a potential customer immediately trust this founder to solve this problem?
+
+5. BLIND SPOT WARNING: What aspect of this problem is the founder most likely to misunderstand due to their background?
+
+Final output: Founder-Problem Fit Score [X/20] with a 3-bullet memo.` }
+  ]
+},
+{
+  pillar:"P0", code:"P2", title:"Assumption Inventory", badge:"new",
+  execOrder:2, deps:["context.md","P1 outputs"], needsProgressive:false,
+  desc:"Extract and risk-rank every assumption baked into the idea before research runs.",
+  prompts:[
+    { id:"P2.1", title:"Full Assumption Extraction",
+      text:`You are a critical thinking coach trained in hypothesis-driven consulting at McKinsey. Your job is to surface every hidden assumption in a startup idea so research is focused on what matters most.
+
+${ctx()}
+
+Extract EVERY assumption embedded in this startup idea across these 7 categories:
+- CUSTOMER: Do these people exist? Do they have this problem? Will they pay?
+- MARKET: Is the market big enough? Is it growing fast enough?
+- TECHNICAL: Can this be built? At what cost? In what timeframe?
+- CHANNEL: Can we reach these customers? At what CAC?
+- BUSINESS MODEL: Will people pay this price? Will they renew/repeat?
+- TIMING: Is the market ready now? Is it too early or too late?
+- TEAM: Does the founding team have the skills to execute this?
+
+For each assumption output:
+| Assumption | Category | If wrong: consequence | Validation evidence needed | Test difficulty |
+Where consequence = LOW / MEDIUM / FATAL
+And test difficulty = EASY / MEDIUM / HARD
+
+Sort by: FATAL assumptions first.
+End with: "The 3 BET-THE-COMPANY assumptions are: [list with one line each on why they are existential]"` },
+    { id:"P2.2", title:"Research Priority & Experiment Sequencer",
+      text:`You are a lean startup coach. The founder has a list of assumptions. Your job is to sequence validation experiments so the most dangerous assumptions are tested first, cheapest and fastest.
+
+${ctx()}
+Additionally read the P2.1 Assumption Extraction output.
+
+For each FATAL assumption from P2.1:
+1. Design the cheapest, fastest possible experiment to test if it is true
+2. Estimate: time to run, cost in INR, minimum sample size
+3. Define a GREEN signal (this assumption is likely true — keep going)
+4. Define a RED signal (this assumption is false — major pivot required)
+5. Define the KILL threshold: what result stops the entire project?
+
+Output: Prioritised Experiment Backlog
+| Priority | Assumption | Experiment design | Cost | Time | Green signal | Red signal | Kill? |
+
+Final line: "Run experiments in this order. Do NOT proceed to Pillar A research until at least the top 3 experiments show Green signals."` }
+  ]
+},
+
+// ── PILLAR A ──────────────────────────────────────────────────────────────
+{
+  pillar:"PA", code:"A2", title:"Market Sizing — TAM / SAM / SOM", badge:"india",
+  execOrder:3, deps:["context.md"], needsProgressive:false,
+  desc:"Quantify the total market opportunity with India-specific city-tier breakdown.",
+  prompts:[
+    { id:"A2.1", title:"Top-Down TAM Sizing",
+      text:`You are a Senior Market Research Analyst at McKinsey who specialises in India market sizing.
+
+${ctx()}
+
+Produce a TOP-DOWN Total Addressable Market analysis:
+1. Start from the broadest relevant industry category. Cite a real market report or data source.
+2. Narrow down to the exact segment this startup addresses using demographic/firmographic filters.
+3. State every assumption used in the narrowing — clearly labeled.
+4. Provide: TAM (global), TAM (India), 5-year CAGR with source.
+5. Flag the 2 assumptions where your estimate is weakest and could swing the number by 2×.
+
+Format: Executive summary paragraph + assumptions table + final number with confidence range.` },
+    { id:"A2.2", title:"Bottom-Up SAM / SOM Sizing",
+      text:`You are a startup analyst building a bottom-up market sizing model for an early-stage investor pitch.
+
+${ctx()}
+
+Build a BOTTOM-UP model:
+1. Define the unit: one customer / one transaction / one seat — whatever the revenue unit is.
+2. Estimate number of addressable units in India today. Show your math step by step.
+3. Apply a realistic capture rate for Year 1, Year 2, Year 3 (justify each rate).
+4. Calculate SAM (realistic India segment) and SOM (what this startup can capture in 3 years).
+5. Compare bottom-up SOM to top-down TAM — are they directionally consistent? If not, explain why.
+
+Output: SOM Year 1: ₹X Cr | SOM Year 3: ₹X Cr | SAM: ₹X Cr | TAM India: ₹X Cr
+Include a sensitivity table showing best / base / worst case.` },
+    { id:"A2.3", title:"India City-Tier Breakdown",
+      text:`You are a consumer insights analyst specialising in India's multi-speed market.
+
+${ctx()}
+
+Break down the market opportunity across India's city tiers:
+
+TIER 1 (Mumbai, Delhi NCR, Bengaluru, Hyderabad, Chennai, Pune, Kolkata):
+- Market size, growth rate, current penetration of similar solutions
+- Customer profile differences vs other tiers
+
+TIER 2 (Jaipur, Lucknow, Indore, Nagpur, Coimbatore, Bhopal, Surat, etc.):
+- Market size, growth rate, digitisation level
+- Infrastructure/logistics/payment challenges
+
+TIER 3 & RURAL:
+- Is this market relevant? If yes, how large and how to reach it?
+- What changes about the product/pricing to serve it?
+
+Recommendation: Which tier to launch in first and why? Which tier is the largest long-term opportunity?
+
+Output: City-tier opportunity table + a paragraph on sequencing.` }
+  ]
+},
+{
+  pillar:"PA", code:"A3", title:"Competitor Analysis", badge:"standard",
+  execOrder:4, deps:["context.md"], needsProgressive:false,
+  desc:"Map every competitor — direct, indirect, substitute — and find where to win.",
+  prompts:[
+    { id:"A3.1", title:"Direct Competitor Deep Dive",
+      text:`You are a competitive intelligence analyst. You never summarise what companies claim about themselves — you only report what their actual customers say, what their pricing reveals, and what their product gaps are.
+
+${ctx()}
+
+For each of the top 5–8 direct competitors in this space:
+
+| Competitor | Founded | Funding | Target customer | Pricing model | Price point | Top 3 features | #1 customer complaint (from reviews) | Growth signal |
+
+Sources to use for each: G2, Capterra, App Store / Play Store reviews, LinkedIn headcount trends, SimilarWeb traffic direction, IndiaMART / Justdial listings for Indian players.
+
+After the table:
+- Which competitor is growing fastest? Why?
+- Which competitor has the angriest customers? What are they angry about?
+- Which competitor is most vulnerable to a new entrant? Why?` },
+    { id:"A3.2", title:"Positioning Map & White Space",
+      text:`You are a strategy consultant. You have just completed a competitor analysis. Now you need to build a positioning map that reveals WHERE the white space is.
+
+${ctx()}
+Use the A3.1 Competitor Deep Dive output.
+
+1. Choose the 2 axes that most meaningfully differentiate solutions in this market (NOT generic axes like "price vs quality" — pick axes specific to this market's dynamics).
+2. Plot all direct competitors on the 2×2 map. Describe their position in words.
+3. Mark the white space: the quadrant or zone where no competitor currently operates.
+4. Assess whether the white space is empty because: (a) nobody has tried it, (b) people have tried and failed, or (c) the market doesn't want what's there.
+5. Recommend the ideal positioning for this startup with a one-sentence positioning statement.
+
+Output: Written description of the map + positioning recommendation.` },
+    { id:"A3.3", title:"Gap & Indirect Competitor Analysis",
+      text:`You are a competitive strategy analyst focused on market entry.
+
+${ctx()}
+
+Part 1 — GAP ANALYSIS:
+What do none of the direct competitors offer that the target customer clearly wants? Use evidence from:
+- Review mining (complaints, feature requests)
+- Job postings at competitors (what they're hiring for reveals roadmap)
+- Support forum threads / Reddit posts
+
+List 5 gaps ranked by: how many customers want it × how painful the absence is.
+
+Part 2 — INDIRECT & SUBSTITUTE COMPETITORS:
+What do customers use instead of a direct solution? List at least 5 categories:
+- Manual processes / spreadsheets
+- Freelancers / agencies
+- Adjacent software with partial overlap
+- Physical/offline solutions
+For each: switching cost, customer type, how hard to pull them away.
+
+Part 3 — MOST DANGEROUS COMPETITOR:
+Who is the ONE competitor that could kill this startup if they entered this exact niche tomorrow? How likely is that? What would trigger it?` }
+  ]
+},
+{
+  pillar:"PA", code:"A4", title:"Target Customer & Persona", badge:"india",
+  execOrder:5, deps:["context.md","A3 outputs"], needsProgressive:false,
+  desc:"Build behavioral personas, JTBD map, and an India-specific customer location guide.",
+  prompts:[
+    { id:"A4.1", title:"Behavioral Persona Builder (India)",
+      text:`You are a Consumer Insights Researcher at Goldman Sachs who has spent 5 years doing ethnographic research in Indian households and small businesses. You build personas based on BEHAVIOR, not demographics.
+
+${ctx()}
+
+Build 3 distinct customer personas. For each:
+
+Name: [Fictional first name]
+Background: [2 lines — what their day looks like]
+Triggering event: [The specific moment they start searching for a solution — not a general pain, a specific incident]
+Current workaround: [Exactly what they do today and how much it costs them]
+Decision process: [Who else influences their purchase? Spouse? Manager? Community?]
+Top objection: [Their single biggest reason to say NO]
+Exact words they use: [3–5 verbatim-style phrases they'd say when describing this problem — for ad copy use]
+Acquisition channel: [Where this persona is most reachable and at what cost]
+
+Each persona should suggest a DIFFERENT acquisition channel. If two personas point to the same channel, you have not differentiated enough — revise.` },
+    { id:"A4.2", title:"Jobs-to-be-Done Framework",
+      text:`You are a product strategist trained in Clayton Christensen's Jobs-to-be-Done methodology.
+
+${ctx()}
+
+For the target customer, map their complete job hierarchy:
+
+FUNCTIONAL JOBS (what they literally need to accomplish):
+- Core job: [the primary task they are hiring this product to do]
+- Related jobs: [3–5 adjacent tasks that arise from the same context]
+
+EMOTIONAL JOBS (how they want to feel):
+- Desired feelings: [3 emotions they want to experience after using the solution]
+- Avoided feelings: [3 emotions they are trying to escape]
+
+SOCIAL JOBS (how they want to be perceived):
+- By whom: [who is watching them — employer, family, peers, community]
+- How they want to be seen: [the identity signal this product purchase makes]
+
+CRITICAL INSIGHT: What is the REAL reason they buy this product — often hidden beneath the functional job? (e.g. "People don't buy a drill, they buy a hole. They don't buy a hole, they buy a picture on the wall.")
+
+Output the insight in one sentence. This sentence should be used in all marketing copy.` },
+    { id:"A4.3", title:"Customer Location Map (India)",
+      text:`You are a growth analyst who specialises in finding Indian startup customers where they actually are — not where you wish they were.
+
+${ctx()}
+
+Map where the ICP (ideal customer profile) for this startup is most reachable in India:
+
+DIGITAL CHANNELS:
+- Subreddits (list specific ones with estimated India user base)
+- WhatsApp communities (what type, how to find them)
+- LinkedIn groups / hashtags used in India
+- Facebook groups (still massive in Tier 2/3)
+- Telegram channels
+- YouTube creators they watch
+- Twitter/X accounts they follow
+
+OFFLINE CHANNELS:
+- Associations / industry bodies they belong to
+- Events / exhibitions / meetups they attend
+- Physical locations (malls, offices, markets, colleges)
+- Local business networks
+
+MEDIA THEY CONSUME:
+- Newsletters, blogs, podcasts in their language
+- Regional language preferences
+
+Output: Prioritised reachability map. For each channel: estimated size, cost to reach, quality of leads (1–5).` }
+  ]
+},
+{
+  pillar:"PA", code:"A5", title:"Demand Validation Evidence", badge:"unique",
+  execOrder:6, deps:["context.md","A4 outputs"], needsProgressive:false,
+  desc:"Find real-world proof that people are actively searching for this solution.",
+  prompts:[
+    { id:"A5.1", title:"Signal Discovery — Real People, Real Pain",
+      text:`You are a market intelligence researcher. Your job is to find EVIDENCE that real people in India are experiencing this problem and actively looking for solutions — not surveys or projections, but raw behavioral signals.
+
+${ctx()}
+
+Find and present:
+
+1. SEARCH SIGNALS: Google Trends India data for the top 5 keywords related to this problem. Include trend direction (rising/falling) and peak months.
+
+2. FORUM SIGNALS: Find 5–10 actual Reddit posts, Quora India answers, or Twitter threads where people describe this exact problem in their own words. Quote the most vivid examples.
+
+3. APP STORE SIGNALS: If competitor apps exist — find reviews that describe unmet needs. Quote 5 reviews that reveal what customers WISH the current solution did.
+
+4. NEWS SIGNALS: Any recent Indian news articles, government reports, or industry data that confirm this problem is real and growing.
+
+5. DEMAND PROXY: Is there any waitlist, community, or petition that already exists for a solution to this problem? If yes, how large?
+
+Conclude with: DEMAND SIGNAL SCORE [X/10] — is this problem actively searched for and discussed, or is it something founders think exists but customers don't actively seek a solution for?` },
+    { id:"A5.2", title:"24-Hour Validation Survey Design",
+      text:`You are a Behavioral Science researcher and Survey Methodology Expert who designs surveys that get honest answers, not socially desirable ones.
+
+${ctx()}
+Reference A4 personas and A5.1 signal discovery.
+
+Design a 12-question validation survey the founder can deploy in the next 24 hours:
+
+Rules:
+- First 2 questions screen for actual target customer (if they don't qualify, thank them and end)
+- Questions 3–9 are behavioral ("what do you DO") not opinion-based ("what do you THINK")
+- Question 10 is a willingness-to-pay conjoint question
+- Question 11 is a trick question to filter out random clickers (if answered wrong, flag the response)
+- Question 12 is an open-ended "what would you want this to do that nothing currently does?"
+
+For each question: state the insight you are trying to extract and the potential bias to watch for.
+
+Where to distribute this survey in India: [list 5 specific communities]
+Target: 50 responses for signal, 200 for confidence.
+Kill criterion: If fewer than 30% of respondents say they have this problem monthly or more often — the problem frequency assumption is wrong.` }
+  ]
+},
+{
+  pillar:"PA", code:"A6", title:"Timing Score", badge:"unique",
+  execOrder:7, deps:["context.md"], needsProgressive:false,
+  desc:"Score whether now is the right moment to enter — with India-specific timing signals.",
+  prompts:[
+    { id:"A6.1", title:"Market Timing Full Assessment",
+      text:`You are a venture capitalist who has seen the same idea succeed once and fail twice — entirely because of timing. Your job is to score whether the market is ready for this idea RIGHT NOW.
+
+${ctx()}
+
+Assess timing across 5 dimensions. Score each 1–10:
+
+1. TECHNOLOGY READINESS: Is the enabling technology (mobile, AI, payments, logistics, APIs) available, affordable, and proven in India?
+
+2. REGULATORY ENVIRONMENT: Is the regulatory environment favorable, neutral, or hostile? Has it recently shifted? What's the trajectory?
+
+3. CONSUMER BEHAVIOR SHIFT: Have Indian consumers' habits changed recently in a way that makes this solution more natural to adopt?
+
+4. INFRASTRUCTURE READINESS: Internet penetration, smartphone ownership, UPI adoption, logistics network — does India's infrastructure support this model in target cities?
+
+5. COMPETITIVE WINDOW: How long before a well-funded competitor replicates this? Is there a 12–18 month window of asymmetric advantage?
+
+For each dimension: score + 2-line justification.
+
+FINAL TIMING SCORE: [X/50]
+VERDICT: Move NOW / Wait 6–12 months / Wait 18+ months / Timing is wrong indefinitely
+SINGLE MOST IMPORTANT TIMING SIGNAL TO WATCH: [name it]` }
+  ]
+},
+{
+  pillar:"PA", code:"A7", title:"Shadow Market Report", badge:"unique",
+  execOrder:8, deps:["context.md","A2 outputs"], needsProgressive:false,
+  desc:"Research the informal/unorganised version of this market — India's hidden economy.",
+  prompts:[
+    { id:"A7.1", title:"Informal Market Size & Behaviour",
+      text:`You are an economic anthropologist who has spent years studying India's informal economy. You understand that in India, 60–80% of most markets are served by informal players who are invisible to standard market research.
+
+${ctx()}
+Reference A2 market sizing outputs.
+
+Research and answer:
+
+1. SHADOW SIZE: What portion of this market is currently served informally (by individual operators, local shops, word-of-mouth networks, barter, or grey-market operators)?
+
+2. INFORMAL PLAYER PROFILES: Who are the informal operators in this market? Describe 3 types — how they operate, what they charge, why customers prefer them despite their limitations.
+
+3. INFORMAL ADVANTAGES: What do informal players do BETTER than any formal startup could? (Speed, trust, personalisation, cash acceptance, local language, credit flexibility)
+
+4. FORMALISATION OPPORTUNITY: What would it take to bring informal customers into a formal product? What's the minimum viable trust signal?
+
+5. PARTNERSHIP ANGLE: Could this startup PARTNER WITH informal players rather than replace them? What would that model look like?
+
+Output: Shadow market size estimate + 3-type informal player profiles + partnership model sketch.` },
+    { id:"A7.2", title:"Informal Channel Activation Strategy",
+      text:`You are a growth strategist who built distribution for a B2C startup in Tier 2 India. You know channels that no VC-backed startup uses because they read US playbooks.
+
+${ctx()}
+
+Design an informal channel activation strategy using channels that competitors are ignoring:
+
+- LOCAL CABLE TV: Which cities? What does a 10-second ad cost? What creative works?
+- AUTO-RICKSHAW / CAB ADVERTISING: Which cities have this infrastructure? Cost per 1,000 impressions?
+- RWA (Resident Welfare Association) BOARDS & GROUPS: How to get listed, who to contact, typical response rate
+- KIRANA STORE PARTNERSHIPS: How similar startups have used kiranas as distribution points
+- REGIONAL LANGUAGE WHATSAPP COMMUNITIES: How to find, join, and engage without being spammy
+- MANDAL / PANCHAYAT NETWORKS: For rural or semi-urban reach — who to contact
+
+For each: cost estimate (INR), cities where this works best, content format that performs.` }
+  ]
+},
+{
+  pillar:"PA", code:"A8", title:"Second Order Effects Map", badge:"unique",
+  execOrder:9, deps:["context.md","A2","A3","A7"], needsProgressive:false,
+  desc:"Map what happens to adjacent markets and behaviours when this startup succeeds.",
+  prompts:[
+    { id:"A8.1", title:"Second & Third Order Effects Analysis",
+      text:`You are a systems thinker trained in first, second, and third order effects analysis. Your job is to map what happens to the surrounding ecosystem when this startup succeeds at scale.
+
+${ctx()}
+
+List the TOP 5 second-order effects of this startup reaching 100,000 users in India:
+
+For each effect:
+- DESCRIBE the effect clearly (what changes in the world)
+- CLASSIFY it: Threat to this business / Opportunity for this business / Neutral market shift
+- TIMELINE: When does this effect manifest? (12 months / 2–3 years / 5+ years)
+- PROBABILITY: How likely? (High / Medium / Low)
+- WHAT TO DO: If threat — mitigate now or prepare to respond. If opportunity — how to capture it before competitors see it.
+
+Then identify:
+- The ONE second-order effect that is MOST LIKELY to become an existential threat
+- The ONE second-order effect that could be a BIGGER BUSINESS than the original idea
+
+Output: Effects table + 2 highlighted call-outs.` }
+  ]
+},
+
+// ── PILLAR B ──────────────────────────────────────────────────────────────
+{
+  pillar:"PB", code:"B1", title:"Business Model & Revenue Streams", badge:"india",
+  execOrder:10, deps:["context.md","A2","A3","A4"], needsProgressive:false,
+  desc:"Select the right revenue model and produce India-adjusted unit economics.",
+  prompts:[
+    { id:"B1.1", title:"Revenue Model Selection",
+      text:`You are a Pricing Strategist who has designed monetisation models for 50+ SaaS and marketplace companies across India and Southeast Asia.
+
+${ctx()}
+
+Evaluate these revenue model options for this specific startup:
+- Subscription (per seat, per month, flat rate)
+- Usage-based (pay per transaction, per API call, per output)
+- Marketplace / commission (% of GMV)
+- Freemium (free tier + paid features)
+- One-time purchase / licensing
+- Services / professional services wrapper
+- Advertising / data monetisation
+- B2B2C (sell to businesses who serve consumers)
+
+For each model: Score it 1–10 for fit with (a) India customer payment behaviour (b) this product's value delivery pattern (c) ability to grow LTV over time.
+
+RECOMMENDATION: One primary model + one complementary secondary model.
+Reason in 3 bullets why these two together are optimal.
+Risk in 2 bullets — what could go wrong with this choice.` },
+    { id:"B1.2", title:"Pricing Strategy & Benchmarks",
+      text:`You are a pricing consultant using Van Westendorp Price Sensitivity Meter and Gabor-Granger methodology adapted for Indian consumer markets.
+
+${ctx()}
+
+Design the pricing strategy:
+
+1. PRICE ANCHORING: What do comparable solutions cost in India? List 5 price points from the competitive landscape.
+
+2. WILLINGNESS TO PAY RANGE: Based on comparable solutions and Indian income levels, estimate:
+   - Too cheap (damages credibility): below ₹X
+   - Acceptable range: ₹X to ₹Y
+   - Too expensive (causes rejection): above ₹Z
+
+3. RECOMMENDED PRICING TIERS (3-tier structure):
+   - Free / Entry tier: what's included, what's the hook
+   - Growth tier: what unlocks, target price, upgrade trigger
+   - Pro/Enterprise tier: target price, who it's for
+
+4. THE #1 PRICING MISTAKE: What is the most common pricing error startups make in this category? How to avoid it.
+
+5. INDIA-SPECIFIC ADJUSTMENTS: Annual vs monthly billing preferences, UPI/BNPL impact on conversion, regional price sensitivity differences.` },
+    { id:"B1.3", title:"Unit Economics Model",
+      text:`You are a financial analyst building a unit economics model for a seed-stage investor presentation. You use India-specific cost benchmarks.
+
+${ctx()}
+Reference B1.1 revenue model and B1.2 pricing.
+
+Build a unit economics model across 3 scenarios (conservative / base / optimistic):
+
+CUSTOMER ACQUISITION COST (CAC):
+- By channel: paid digital, content/SEO, referral, sales, community
+- Blended CAC estimate for each scenario
+
+LIFETIME VALUE (LTV):
+- Average order value / monthly revenue per customer
+- Churn rate assumption per scenario
+- LTV = (Monthly Revenue × Gross Margin) / Monthly Churn Rate
+
+PAYBACK PERIOD:
+- Months to recover CAC from gross profit
+
+UNIT ECONOMICS SCORECARD:
+| Metric | Conservative | Base | Optimistic |
+| Blended CAC | ₹X | ₹X | ₹X |
+| Monthly Revenue/Customer | ₹X | ₹X | ₹X |
+| Gross Margin | X% | X% | X% |
+| LTV | ₹X | ₹X | ₹X |
+| LTV:CAC Ratio | X:1 | X:1 | X:1 |
+| Payback Period | X months | X months | X months |
+
+Flag if any scenario shows LTV:CAC below 3:1 — that is a business model problem, not a marketing problem.` }
+  ]
+},
+{
+  pillar:"PB", code:"B2", title:"SWOT Analysis", badge:"standard",
+  execOrder:11, deps:["context.md","A3","B1"], needsProgressive:false,
+  desc:"Strategic SWOT rated by severity and probability — designed to drive decisions.",
+  prompts:[
+    { id:"B2.1", title:"Decision-Grade SWOT Analysis",
+      text:`You are a Corporate Strategist at JP Morgan. You do not produce SWOT analyses that sit in a deck and collect dust. You produce SWOT analyses that drive the next 90 days of decisions.
+
+${ctx()}
+Reference A3 competitor analysis and B1 business model.
+
+STRENGTHS: What can this startup do that competitors literally cannot copy in 12 months? (Not generic strengths — specific, defensible advantages tied to founder, tech, or relationships)
+
+WEAKNESSES: What honest reason would a customer choose a competitor over this? What internal capability is missing that is critical to success?
+
+OPPORTUNITIES: What market shift is happening RIGHT NOW (this year) that this startup can exploit before incumbents wake up?
+
+THREATS: What specific scenario could kill this business within 24 months? Be specific — name the scenario, not just the category.
+
+For each point: Rate SEVERITY (1–5) and PROBABILITY (1–5). Multiply for priority score.
+
+Then produce a 2×2 Action Matrix:
+- Strengths × Opportunities = ATTACK MOVES (do these in next 90 days)
+- Weaknesses × Threats = SURVIVAL MOVES (defend against these now)
+
+Single most important action this quarter — one sentence.` }
+  ]
+},
+{
+  pillar:"PB", code:"B3", title:"Financial Projections (3-Year)", badge:"india",
+  execOrder:12, deps:["context.md","B1","A2"], needsProgressive:false,
+  desc:"3-year financial model with India cost benchmarks, burn rate, and runway.",
+  prompts:[
+    { id:"B3.1", title:"3-Year Financial Model",
+      text:`You are a startup CFO building a 3-year financial model for a pre-seed startup preparing for its first investor conversation.
+
+${ctx()}
+Reference B1 unit economics and A2 market sizing.
+
+Build a 3-year model across conservative / base / optimistic scenarios:
+
+REVENUE MODEL:
+- Month-by-month for Year 1, quarterly for Years 2–3
+- Customer growth assumptions (justify each cohort growth rate)
+- Revenue per customer using B1.2 pricing
+
+COST STRUCTURE:
+- Fixed costs: salaries (use India market rates), office/tools, software
+- Variable costs: cost of delivery per customer, payment processing, customer support
+- Marketing spend as % of revenue (benchmark: Indian startups typically 20–40% early stage)
+
+KEY OUTPUTS:
+- Monthly burn rate (Year 1)
+- Break-even month
+- Total capital required to reach break-even
+- Runway at different funding amounts (₹25L / ₹50L / ₹1Cr / ₹2Cr)
+
+FORMAT: Summary table + 3 scenario comparison + a single paragraph "what has to be true for the base case to hold?"` },
+    { id:"B3.2", title:"Bootstrappable vs Investor-Required Assessment",
+      text:`You are a startup advisor who helps founders decide whether to bootstrap, raise angel funding, or go for VC — and you've seen the consequences of getting this wrong.
+
+${ctx()}
+Reference B3.1 financial projections.
+
+Assess and answer:
+
+1. BOOTSTRAPPABLE THRESHOLD: What revenue or milestone does the business need to reach before it becomes self-sustaining? Is that reachable with founder savings?
+
+2. CAPITAL EFFICIENCY SCORE: How many rupees of revenue does this business generate per rupee spent? Compare to benchmarks for similar models.
+
+3. FUNDING REQUIREMENT TRIGGER: At what point does external capital accelerate growth vs just keeping the lights on?
+
+4. GRANT ELIGIBILITY: Does this idea qualify for Startup India Seed Fund (max ₹20L), SIDBI, DPIIT grants, or any state government schemes? List specific schemes and eligibility criteria.
+
+5. RECOMMENDATION: Bootstrap to ₹X MRR first / Raise ₹X from angels at idea stage / Skip angel, go straight to seed VC — with justification.` }
+  ]
+},
+{
+  pillar:"PB", code:"B4", title:"Customer Financing Map", badge:"unique",
+  execOrder:13, deps:["context.md","A4","B1"], needsProgressive:false,
+  desc:"Map India-specific affordability bridges — BNPL, EMI, community buying models.",
+  prompts:[
+    { id:"B4.1", title:"India Affordability & BNPL Integration Map",
+      text:`You are a fintech consultant who has helped 15 Indian startups integrate buy-now-pay-later and EMI options to convert price-sensitive customers.
+
+${ctx()}
+
+Assess affordability as a growth lever:
+
+1. AFFORDABILITY BARRIER CHECK: Is price a genuine adoption blocker for the target customer segment? Estimate the % of ICP for whom the recommended price is unaffordable without financing.
+
+2. BNPL / EMI OPTIONS:
+   - LazyPay: eligibility criteria, integration cost, merchant fee
+   - Simpl: eligibility, use cases, merchant fee
+   - Other BNPL / pay-later providers currently active in India (verify they are still operating)
+   - Credit card EMI via Razorpay/PayU — setup complexity and cost
+   - UPI Credit Line (NPCI's new feature) — what it enables
+
+3. ALTERNATIVE PRICING MODELS FOR INDIA:
+   - Pay-per-use (avoid upfront commitment)
+   - Community / group buying (10 people share one subscription)
+   - Income-share agreement (pay after you earn — used by EdTech)
+   - Sachet pricing (daily/weekly micro-payments instead of monthly)
+
+4. RECOMMENDATION: Which 2 options would have the highest impact on conversion for this specific product? Estimated conversion uplift?
+
+5. WHICH BNPL PARTNER TO APPROACH FIRST: Which team or channel to approach (e.g. merchant partnerships page), typical merchant terms, integration timeline. Do not invent contact names.` }
+  ]
+},
+{
+  pillar:"PB", code:"B5", title:"Comparable Exit & Success Benchmarks", badge:"standard",
+  execOrder:14, deps:["context.md","A3","B1"], needsProgressive:false,
+  desc:"Learn from startups that succeeded and failed in this model.",
+  prompts:[
+    { id:"B5.1", title:"Success & Failure Case Study Analysis",
+      text:`You are a startup researcher who has conducted post-mortems on 200+ startup outcomes. You learn more from failures than from success stories.
+
+${ctx()}
+
+Find and analyse 6 comparable startups (3 successes, 3 failures):
+
+FOR EACH SUCCESS:
+- Company name, country, founded, exit/current status
+- What they got right that others didn't (ONE key insight)
+- Metrics at key milestones (first ₹1Cr revenue, first 10,000 users, Series A)
+- What this startup should steal from their playbook
+
+FOR EACH FAILURE:
+- Company name, what they built, why they failed (be specific — not "ran out of money" but WHY they ran out of money)
+- The single avoidable mistake
+- What this startup should do differently to avoid the same fate
+
+Then: TIME-TO-PROFITABILITY BENCHMARKS for this category.
+And: TYPICAL EXIT MULTIPLES — if this startup succeeds, what are realistic acquisition multiples? Who are typical acquirers in this space?` }
+  ]
+},
+{
+  pillar:"PB", code:"B6", title:"Acquisition Target Analysis", badge:"unique",
+  execOrder:15, deps:["context.md","A3","B1","B5"], needsProgressive:false,
+  desc:"Map potential acquirers and build toward the most likely exit from Day 1.",
+  prompts:[
+    { id:"B6.1", title:"Acquirer Map & Day-1 Exit Strategy",
+      text:`You are an investment banker who has closed 8 startup acquisitions in India. You believe every founder should know who their potential acquirers are before they write a single line of code.
+
+${ctx()}
+
+Identify the top 5 most likely acquirers if this startup reaches ₹10Cr ARR:
+
+For each potential acquirer:
+| Acquirer | Why they would buy | What metrics they care about | Acquisition precedents | Likely offer multiple | Timeline |
+
+Then:
+1. ACQUIRER-FIT FEATURES: What 3 product or data features would make this startup more attractive to the most likely acquirer? Should these be prioritised on the roadmap from Day 1?
+
+2. CUSTOMER BASE ALIGNMENT: Which customer segments would be most valuable to each acquirer? Does this change the ICP targeting strategy?
+
+3. BUILD-TO-BUY CHECKLIST: What does the startup need to have in place (IP, contracts, data, team, metrics) to be acquisition-ready?
+
+4. STRATEGIC RECOMMENDATION: Optimise for acquisition vs IPO vs long-term independence? What's the founder's best path given the competitive landscape?` }
+  ]
+},
+
+// ── PILLAR C ──────────────────────────────────────────────────────────────
+{
+  pillar:"PC", code:"C1", title:"Go-to-Market Strategy", badge:"india",
+  execOrder:16, deps:["context.md","A3","A4","B1"], needsProgressive:false,
+  desc:"GTM phases, channel mix, first 100 customers playbook, India-specific channels.",
+  prompts:[
+    { id:"C1.1", title:"GTM Phasing: Launch → Growth → Scale",
+      text:`You are a Growth Strategist who has led go-to-market for 30+ product launches in India. You know that most GTM strategies fail because they try to do everything at once.
+
+${ctx()}
+Reference A4 customer personas, A3 competitor analysis, B1 unit economics.
+
+Design a 3-phase GTM plan:
+
+PHASE 1 — LAUNCH (Months 1–3):
+Goal: First 50 paying customers.
+Channel(s): Max 2. What are they? Why these? What's the exact first action the founder takes tomorrow?
+Message: The 3 words that describe this product to an ICP. The headline for the landing page.
+Budget: ₹X total. Where does it go?
+
+PHASE 2 — GROWTH (Months 4–12):
+Goal: ₹X MRR. X customers.
+Channels: Expand to 4. Which 2 new ones? Why now?
+What is the referral / word-of-mouth mechanism? How do happy customers bring in the next customer?
+What process gets automated in this phase?
+
+PHASE 3 — SCALE (Year 2):
+Which channel becomes the primary engine?
+What partnerships unlock distribution at scale?
+What does the team look like? Who handles what?
+
+For India: Specifically call out Meesho, IndiaMart, WhatsApp Business, LinkedIn India, and ONDC — which apply and how?` },
+    { id:"C1.2", title:"First 100 Customers Playbook",
+      text:`You are a sales coach who has helped 50 founders close their first 100 customers. You know it is never done the way people think — it is done with embarrassingly direct outreach, one conversation at a time.
+
+${ctx()}
+Reference A4 customer location map.
+
+Write a step-by-step playbook to acquire the first 100 customers:
+
+STEP 1 — The Founder's Network (Customers 1–10):
+Who in the founder's existing network fits the ICP? How to reach them. What to say. Exact message template.
+
+STEP 2 — Community Seeding (Customers 11–30):
+Which 5 online communities (India-specific) should the founder join this week? What to post. How to start conversations. What NOT to do (avoid spam bans).
+
+STEP 3 — Direct Outreach (Customers 31–60):
+LinkedIn, WhatsApp, IndiaMart, or Email — which channel for this ICP? Outreach sequence: Day 1, Day 3, Day 7 messages. What personalisation makes these not feel like spam?
+
+STEP 4 — Referral Loop (Customers 61–100):
+Design a referral mechanism that works without heavy tech. What incentive works for Indian customers in this segment? (Discount / recognition / access / cash?)
+
+Metric to track each week. Kill signal: if fewer than 10 customers in the first 30 days despite running this playbook — what to change?` }
+  ]
+},
+{
+  pillar:"PC", code:"C2", title:"Distribution Arbitrage Finder", badge:"unique",
+  execOrder:17, deps:["context.md","A4","C1"], needsProgressive:false,
+  desc:"Find underpriced distribution channels in India that competitors are ignoring.",
+  prompts:[
+    { id:"C2.1", title:"India Distribution Arbitrage Map",
+      text:`You are a growth hacker who built a D2C brand to ₹10Cr revenue using only offline and regional digital channels that VC-backed competitors were too snobbish to use.
+
+${ctx()}
+Reference A4 customer location map and C1 GTM strategy.
+
+Identify distribution channels that are currently UNDERPRICED or IGNORED by competitors in this market:
+
+For each channel, answer: Current competition level (low/medium/high), Cost per 1,000 impressions or leads in INR, Who is already winning here and how, Exact first step to activate this channel:
+
+1. REGIONAL LANGUAGE YOUTUBE: Which languages (Tamil, Telugu, Kannada, Marathi, Bengali) have audiences relevant to this ICP? Estimated creator cost for a sponsored video?
+
+2. HINDI PODCAST ADVERTISING: Which podcasts reach this ICP? Cost per episode mention?
+
+3. WHATSAPP CHANNEL FEATURE (Meta's 2023 launch): How to build a subscriber base. Content strategy. Monetisation pathway.
+
+4. ONDC (Open Network for Digital Commerce): Is this product listable on ONDC? What's the integration process? Who has done it successfully?
+
+5. RWA / APARTMENT COMPLEX NETWORKS: Which management apps (MyGate, NoBroker) allow targeted communication? Cost? How to access.
+
+6. TIER 2 CITY OFFLINE: Auto-rickshaw branding, local cable TV, college canteen boards — which of these fits this ICP and what does it cost?
+
+7. MICRO-INFLUENCER INSTAGRAM (50K–200K followers): Cost per post in INR for India micro-influencers in relevant niches.
+
+Output: Ranked by COST EFFICIENCY × AUDIENCE FIT. Top 3 to activate in first 90 days.` }
+  ]
+},
+{
+  pillar:"PC", code:"C3", title:"MVP / Product Blueprint", badge:"standard",
+  execOrder:18, deps:["context.md","A3","A4","B1"], needsProgressive:false,
+  desc:"Define the minimum viable product, tech stack, and build vs buy decisions.",
+  prompts:[
+    { id:"C3.1", title:"MVP Feature Prioritisation",
+      text:`You are a product manager who has shipped MVPs at 3 different startups. You are ruthless about cutting features that don't test the riskiest assumption.
+
+${ctx()}
+Reference P2 assumption inventory and A3 competitor analysis.
+
+Design the MVP:
+
+CORE PRINCIPLE: The MVP exists to test ONE thing — the riskiest assumption from P2. What is that assumption? Every feature decision should be evaluated against this test.
+
+FEATURE PRIORITISATION MATRIX:
+List all features the founder wants to build. For each:
+- Does this feature test the core assumption? (Yes / Partially / No)
+- Can the business operate without it for the first 90 days? (Yes / No)
+- Can it be faked manually (Wizard of Oz method) before building? (Yes / No)
+
+CUT: Any feature that doesn't test the core assumption AND can be faked manually.
+BUILD: Only features where automation is critical to the test.
+
+MINIMUM FEATURE SET: What 3–5 things must the MVP do on Day 1?
+
+NO-CODE PATH: Can this MVP be built without a technical co-founder using tools like Bubble, Webflow, Glide, Notion + Zapier, or Typeform? If yes, which combination? Estimated setup time and monthly cost in INR.
+
+BUILD ORDER: What gets built first, second, third? Why?` },
+    { id:"C3.2", title:"Tech Stack & Build vs Buy Decisions",
+      text:`You are a CTO advisor helping a first-time non-technical founder make smart technology decisions that don't lock them in or blow their budget.
+
+${ctx()}
+Reference C3.1 MVP scope.
+
+Recommend a tech stack for this startup with India-specific considerations:
+
+FRONTEND: Which framework / no-code tool? Why? Cost?
+BACKEND: Which platform / BaaS (Supabase, Firebase, AWS Amplify)? Why?
+DATABASE: What type and provider? Cost at scale?
+PAYMENTS: Razorpay vs PayU vs Cashfree vs Stripe — which for this use case and why?
+AUTHENTICATION: Options and recommendation
+HOSTING: AWS vs GCP vs DigitalOcean vs Vercel — India latency considerations
+ANALYTICS: What to track from Day 1? Which tool?
+COMMUNICATIONS: WhatsApp Business API vs SMS vs Email — for this customer base
+
+BUILD VS BUY DECISIONS:
+For each core function: custom build / use existing SaaS / white-label?
+Evaluate: time to build, ongoing maintenance cost, vendor lock-in risk.
+
+TOTAL ESTIMATED COST: Monthly infrastructure cost at 0, 1,000, and 10,000 users (in INR).
+WARNING FLAGS: What technical decisions made in MVP phase are hardest to undo? Which to get right from Day 1?` }
+  ]
+},
+{
+  pillar:"PC", code:"C4", title:"90-Day Operational Roadmap", badge:"standard",
+  execOrder:19, deps:["context.md","C1","C3"], needsProgressive:false,
+  desc:"Week-by-week execution plan with milestones, tools, and hiring sequencing.",
+  prompts:[
+    { id:"C4.1", title:"Week-by-Week 90-Day Plan",
+      text:`You are a startup operations coach who has seen founders waste their first 90 days on non-essential tasks. You build plans that make the most dangerous week the most productive one.
+
+${ctx()}
+Reference C1 GTM strategy, C3 MVP blueprint, P2 assumption inventory.
+
+Build a week-by-week plan for Days 1–90:
+
+WEEKS 1–2 (Discovery Sprint):
+- Core customer discovery activities
+- Surveys, calls, or field research to run
+- Hypotheses to validate or invalidate
+- Success metric: X conversations completed
+
+WEEKS 3–4 (Build / Set Up):
+- What gets built or set up this fortnight
+- Which no-code or tech tools get configured
+- Brand and domain registered
+- Payment integration live
+
+WEEKS 5–8 (Soft Launch):
+- First customers acquired (how many, from which channel)
+- First feedback collected (what to ask, how to record)
+- First iteration based on feedback
+- Kill signal: if [threshold] not met, run this contingency
+
+WEEKS 9–12 (Optimise & Grow):
+- Double down on what worked in weeks 5–8
+- Cut what didn't
+- Prepare for investor conversations (if applicable)
+
+TOOLS TO USE (India-focused, budget-friendly):
+List the exact tool stack for operations, sales, marketing, support — with monthly INR cost.
+
+HIRING PLAN: Who is the first hire, when, at what salary level?` }
+  ]
+},
+{
+  pillar:"PC", code:"C5", title:"The Sequencing Engine", badge:"unique",
+  execOrder:20, deps:["context.md","B1","C1","C3","C4"], needsProgressive:false,
+  desc:"Personalised decision tree for the next 20 decisions in the right order.",
+  prompts:[
+    { id:"C5.1", title:"Decision Sequencing — Next 20 Decisions",
+      text:`You are a startup sequencing expert. You have studied why startups fail due to doing the right things in the wrong order — building before validating, hiring before finding product-market fit, fundraising before proving the model.
+
+${ctx()}
+Reference all C-pillar outputs (C1, C3, C4).
+
+Produce the exact sequence of the next 20 decisions this founder needs to make:
+
+For each decision:
+| # | Decision | Why this comes NOW | What information is needed to make it | What happens if done too early | What happens if done too late |
+
+The 20 decisions should include critical sequencing choices like:
+- When to stop using manual processes and build software
+- When to hire the first person and in which role
+- When to approach investors vs keep bootstrapping
+- When to expand to a second customer segment
+- When to add a second product feature
+- When to launch paid advertising
+- When to formalise the legal entity
+
+RED FLAGS: List 5 signs that the founder is doing something out of sequence, with the consequence.
+
+Real examples of Indian startups that failed specifically because of wrong sequencing — use to illustrate the most critical decisions.` }
+  ]
+},
+{
+  pillar:"PC", code:"C6", title:"The Steal This Strategy", badge:"unique",
+  execOrder:21, deps:["context.md","A3","C1"], needsProgressive:false,
+  desc:"Find playbooks from different industries that solved the exact same problem.",
+  prompts:[
+    { id:"C6.1", title:"Cross-Industry Playbook Translation",
+      text:`You are a strategic advisor who specialises in cross-industry learning. You believe every startup problem has already been solved in a different industry — the key is finding and adapting the solution.
+
+${ctx()}
+
+Find 3 examples of startups or companies in COMPLETELY DIFFERENT industries that solved the exact same core problem this startup is addressing:
+
+For each example:
+1. COMPANY: Who they are, what industry, what problem they solved (translated to match the core problem)
+2. THE MECHANISM: Exactly how they solved it — what was the key insight or method?
+3. ADAPTATION: How to apply this mechanism specifically to this startup, given the Indian market context, budget, and stage
+4. COST ESTIMATE: What would it cost in INR to implement this adapted version?
+5. TIMELINE: How long to see results?
+
+Then: THE SINGLE MOST POWERFUL STEAL — which of the 3 playbooks is most applicable and most likely to create asymmetric advantage?
+
+Write a 3-step implementation guide for the chosen steal, specific enough that the founder can start implementing it this week.` }
+  ]
+},
+{
+  pillar:"PC", code:"C7", title:"SEO & Content Launch Strategy", badge:"india",
+  execOrder:22, deps:["context.md","A4","A5"], needsProgressive:false,
+  desc:"India keyword data, content pillars, first 5 articles, 30-day social calendar.",
+  prompts:[
+    { id:"C7.1", title:"India SEO & Content Strategy",
+      text:`You are a Content Strategy Director who has grown 3 Indian SaaS startups from 0 to 100,000 monthly organic visitors. You know Indian SEO is different from US SEO — different search intent, different language mix, different featured snippet opportunities.
+
+${ctx()}
+Reference A4 persona and A5 demand validation.
+
+Produce a complete India SEO and content launch strategy:
+
+1. TOP 20 KEYWORDS: Target keywords with India-specific search volume. For each:
+   - Monthly search volume (India)
+   - Keyword difficulty (estimated)
+   - Search intent (informational / transactional / navigational)
+   - Whether competitors are ranking for it
+
+2. CONTENT PILLARS: 3 content themes that the website should own. Each pillar should be:
+   - Aligned to a stage of the buyer journey
+   - Ownable (no major media site or well-funded competitor dominates it)
+   - Searchable in India
+
+3. FIRST 5 BLOG POST TITLES: Specific enough to write immediately. Include the target keyword, the format (listicle, how-to, comparison), and the primary persona it serves.
+
+4. 30-DAY SOCIAL CALENDAR TEMPLATE: Week-by-week topics for LinkedIn (if B2B), Instagram (if B2C), and YouTube Shorts. Include optimal posting frequency for Indian startup accounts.
+
+5. DISTRIBUTION: How to get the first 1,000 readers to each article without paid promotion.` }
+  ]
+},
+{
+  pillar:"PC", code:"C8", title:"Brand Identity Starter Kit", badge:"india",
+  execOrder:23, deps:["context.md","A4","B1"], needsProgressive:false,
+  desc:"Brand names, visual identity, trademark check, positioning for India.",
+  prompts:[
+    { id:"C8.1", title:"Brand Name & Identity Generation",
+      text:`You are a Brand Strategist who has named 30 Indian startups and knows what makes a brand name stick, travel across Indian languages, and survive trademark search.
+
+${ctx()}
+
+Generate 5 brand name options with this framework for each:
+- Name
+- Why it works for Indian pronunciation and memory
+- Domain availability (check .com and .in)
+- Linguistic check: does it mean anything negative in Hindi, Tamil, Bengali, Telugu, Kannada?
+- Trademark risk assessment (low/medium/high — which existing marks are close?)
+
+Then:
+BRAND ARCHETYPE: Which of the 12 brand archetypes fits this startup's positioning? (Hero / Sage / Creator / Caregiver / Explorer / Jester / Magician / Regular Guy / Lover / Ruler / Outlaw / Innocent)
+Why this archetype? How does it show up in language, visual style, and tone of voice?
+
+TAGLINE OPTIONS: 3 options. Each under 7 words. In English. Must translate well to Hindi.
+
+POSITIONING STATEMENT (use this framework):
+"For [ICP] who [pain], [Brand Name] is the [category] that [key benefit] unlike [alternative] because [proof point]."
+
+VISUAL IDENTITY BRIEF: Color palette (3 colors with hex codes) and font pairing rationale. What feeling should the design convey? What should it never look like?
+
+INDIA TRADEMARK FILING: Link to the IP India trademark search. What class to file under. Estimated cost and timeline.` }
+  ]
+},
+
+// ── PILLAR D ──────────────────────────────────────────────────────────────
+{
+  pillar:"PD", code:"D1", title:"India Legal & Regulatory Compliance", badge:"unique",
+  execOrder:24, deps:["context.md"], needsProgressive:false,
+  desc:"Full India legal setup guide — entity, DPIIT, sector licences, IP, and costs.",
+  prompts:[
+    { id:"D1.1", title:"Entity Structure & Registration Roadmap",
+      text:`You are a startup lawyer with a practice focused on early-stage Indian companies. You have incorporated 100+ entities and know exactly what founders get wrong in the first 6 months.
+
+${ctx()}
+
+Recommend and justify:
+
+1. ENTITY TYPE: Pvt Ltd vs LLP vs OPC vs Sole Proprietorship — which is right for this startup and WHY? Consider: investor-readiness, tax implications, compliance burden, co-founder equity sharing, foreign capital eligibility.
+
+2. DPIIT STARTUP INDIA RECOGNITION:
+   - Does this startup qualify?
+   - What is the 3-year income tax exemption and how to claim it?
+   - What documentation is required for recognition?
+
+3. MANDATORY REGISTRATIONS CHECKLIST:
+   - MCA incorporation (timeline, cost)
+   - PAN and TAN
+   - GST registration (threshold and applicable rates for this business)
+   - MSME registration (benefits applicable)
+   - Sector-specific: FSSAI (if food), RBI licence (if fintech), SEBI registration (if investment), DPDP Act 2023 and DPDP Rules (if collecting personal data)
+
+4. INTELLECTUAL PROPERTY:
+   - What to trademark (name, logo, tagline)
+   - Whether the core technology is patentable
+   - Copyright protection for software
+   - Cost and timeline for each
+
+5. ESTIMATED LEGAL SETUP COST: ₹X to ₹Y. Timeline to be legally operational: X weeks.
+
+6. WHAT NOT TO DELAY: Which of these, if left undone, creates legal risk in the first year?` },
+    { id:"D1.2", title:"Angel Tax & Foreign Investment Readiness",
+      text:`You are a CA (Chartered Accountant) specialising in startup funding compliance in India.
+
+${ctx()}
+
+Cover the following:
+
+1. ANGEL TAX ABOLISHMENT (effective FY 2025–26): What changed? Does this now make raising from Indian angels simpler? What safeguards remain?
+
+2. FOREIGN DIRECT INVESTMENT:
+   - Is this business in a sector with FDI restrictions?
+   - Which route: Automatic vs Government approval?
+   - FEMA compliance requirements for foreign capital
+   - RBI reporting requirements post-investment
+
+3. ESOP FRAMEWORK:
+   - When to set up an ESOP pool? How large?
+   - Tax implications for founders vs employees
+   - Cliff and vesting schedules standard in India
+
+4. SHAREHOLDER AGREEMENT MUST-HAVES:
+   - Anti-dilution clauses, drag-along, tag-along, right of first refusal
+   - What a first-time founder should insist on vs concede
+
+5. TERM SHEET TRAPS: The 3 most common VC term sheet clauses that Indian founders regret agreeing to at seed stage.` }
+  ]
+},
+{
+  pillar:"PD", code:"D2", title:"Regulatory Horizon Scan", badge:"unique",
+  execOrder:25, deps:["context.md","D1"], needsProgressive:false,
+  desc:"Regulations under discussion that will affect this business in the next 24 months.",
+  prompts:[
+    { id:"D2.1", title:"24-Month Regulatory Horizon Analysis",
+      text:`You are a policy analyst who tracks Indian regulatory developments across TRAI, RBI, SEBI, MCA, DPDP, and MEITY. You brief startup founders on what's coming before it hits.
+
+${ctx()}
+
+Research and report:
+
+1. REGULATIONS IN PUBLIC COMMENT / DRAFT PHASE:
+   - Any draft regulations affecting this business model that are currently open for public comment
+   - How to submit a response (founders can influence these)
+   - Expected timeline to enforcement
+
+2. REGULATIONS LIKELY IN NEXT 24 MONTHS:
+   - What is the regulatory direction in this sector?
+   - Which regulatory body is most likely to issue guidance?
+   - How have similar regulations played out in the UK, EU, or US (early signals)?
+
+3. BUILD-FOR-COMPLIANCE DECISION:
+   - Should the founder build for the expected regulatory environment from Day 1 (slower launch, higher cost) or move fast and adapt (faster launch, compliance risk)?
+   - What is the cost of getting this wrong?
+
+4. REGULATORY OPPORTUNITY:
+   - Is there any upcoming regulation that would BENEFIT this startup if it's positioned correctly? (e.g. mandating a service this startup provides)
+
+Output: Regulatory risk rating (Low/Medium/High) + a one-page regulatory brief the founder can share with investors.` }
+  ]
+},
+{
+  pillar:"PD", code:"D3", title:"Indian Funding Landscape & Investor Map", badge:"unique",
+  execOrder:26, deps:["context.md","B3","F6"], needsProgressive:true,
+  desc:"India-specific investors, government schemes, accelerators, and pitch preparation.",
+  prompts:[
+    { id:"D3.1", title:"India Funding Roadmap & Investor Map",
+      text:`You are a venture capital analyst at a Mumbai-based early-stage fund. You have reviewed 800+ pitch decks and know exactly which investors are active in which sectors.
+
+${prog()}
+
+Based on the startup's stage, sector, and metrics from progressive.md:
+
+1. FUNDING STAGE RECOMMENDATION: Should this startup be bootstrapped / raise pre-seed / raise seed / go straight to Series A? What milestone triggers each round?
+
+2. TOP 10 RELEVANT INVESTORS:
+   For each: Fund name, focus sector, typical cheque size (INR), portfolio companies in this sector, partner name and contact approach, what they look for that's unique to them.
+
+3. GOVERNMENT SCHEMES:
+   - Startup India Seed Fund Scheme: eligibility, amount (up to ₹20L for POC, ₹50L for commercialisation), application process
+   - SIDBI Fund of Funds: how to access
+   - MUDRA Loan (Tarun category): eligibility and amount
+   - Any state-specific scheme applicable to this industry and state
+
+4. ACCELERATORS & INCUBATORS:
+   - IIM/IIT-based programs in relevant sector
+   - Sector-specific accelerators (fintech → Fintech Valley Vizag, agri → AgriSome, etc.)
+   - International programs with India cohorts (YC, Antler, Founders Factory)
+
+5. PITCH DECK OUTLINE: 12-slide structure customised for this specific startup. What each slide should contain based on the research findings in progressive.md.
+
+6. INDIA VALUATION BENCHMARKS: What is a realistic pre-money valuation for this idea at pre-seed, seed, and Series A in India this year?` }
+  ]
+},
+
+// ── PILLAR E ──────────────────────────────────────────────────────────────
+{
+  pillar:"PE", code:"E1", title:"Risk Register & Mitigation Playbook", badge:"standard",
+  execOrder:37, deps:["progressive.md"], needsProgressive:true,
+  desc:"Top 10 risks ranked by probability × impact with early warnings and mitigations.",
+  prompts:[
+    { id:"E1.1", title:"Full Risk Register",
+      text:`You are a Risk Officer who has led due diligence for 20+ seed and Series A investments in India. You have seen every type of startup fail — and most failures were predictable.
+
+${prog()}
+
+Using all research in progressive.md, produce a comprehensive risk register:
+
+For each of the TOP 10 RISKS, provide:
+| Risk | Category | Probability (1–5) | Impact (1–5) | Priority Score | Early Warning Sign | Mitigation Action | Owner | Timeline |
+
+Categories: Market / Competitive / Technical / Regulatory / Financial / Team / Operational / Reputational
+
+After the table:
+- The ONE risk most likely to materialise in the first 6 months
+- The ONE risk that would be hardest to recover from
+- The kill criterion for each of the top 3 risks (what specific event or number triggers a pivot or shutdown decision)
+
+PIVOT OPTIONS for top 3 risks: If this risk materialises, what is the pivot? Does the pivot preserve the customer base, the team, or the technology?` }
+  ]
+},
+{
+  pillar:"PE", code:"E2", title:"The Pre-Mortem", badge:"unique",
+  execOrder:38, deps:["progressive.md"], needsProgressive:true,
+  desc:"NASA-style failure narratives written in past tense, looking back from two years in the future.",
+  prompts:[
+    { id:"E2.1", title:"3 Failure Narratives & Prevention Strategies",
+      text:`You are a startup therapist who has conducted post-mortems with 100 failed founders. Today you are running a PRE-mortem — imagining the failure before it happens so it can be prevented.
+
+${prog()}
+
+Write 3 vivid failure narratives set two years from today. Each narrative should:
+- Be written in the PAST TENSE, as if looking back from two years in the future
+- Read like a real story, not a bullet list
+- Name the specific decision or non-decision that caused the failure
+- Be emotionally resonant — founders should feel this, not just read it
+
+NARRATIVE 1 — THE MARKET TRAP: "We solved a problem that people had, but not badly enough to pay for."
+NARRATIVE 2 — THE EXECUTION COLLAPSE: "The idea was right, but the team couldn't execute it."
+NARRATIVE 3 — THE COMPETITIVE AMBUSH: "We were winning until a well-funded competitor entered."
+
+For each narrative:
+PREVENTION: What ONE action taken today would have prevented this failure?
+EARLY WARNING SIGN: What signal in Months 1–6 would have shown this was coming?
+TODAY'S DECISION: What does the founder do differently THIS WEEK because of this narrative?
+
+Final output: "THE SINGLE MOST LIKELY POINT OF COLLAPSE for this specific startup is: [one sentence]"` }
+  ]
+},
+{
+  pillar:"PE", code:"E3", title:"The Devil's Advocate Section", badge:"unique",
+  execOrder:39, deps:["progressive.md"], needsProgressive:true,
+  desc:"The strongest case against this business existing at all — written without mercy.",
+  prompts:[
+    { id:"E3.1", title:"Devil's Advocate Full Brief",
+      text:`You are the world's most pessimistic venture capitalist. You have passed on 50 companies that went on to be unicorns, but you have also saved yourself from 200 investments that would have lost money. You are about to give your most honest, unfiltered assessment.
+
+${prog()}
+
+Write a Devil's Advocate brief covering:
+
+1. THE SINGLE STRONGEST ARGUMENT AGAINST THIS BUSINESS:
+Not a list. One argument, written in full, that is the most damning case against this startup existing at all. This is the argument a smart investor would make to justify passing.
+
+2. THE MOST LIKELY WAY THIS STARTUP FAILS:
+Not the most dramatic failure. The most likely one. Written bluntly, without softening. "This startup will probably fail because X — here is why X is more likely than founders typically admit."
+
+3. THE ONE COMPETITOR WHO COULD CRUSH THIS:
+Which existing company — if they decided to enter this niche tomorrow with full resources — would make this startup irrelevant? Why haven't they done it yet? What would trigger them to do it?
+
+4. THE BET-THE-COMPANY ASSUMPTION:
+The single assumption the entire business depends on. If this one thing is not true, the whole model collapses. Is there any evidence this assumption is TRUE — or is it just a founding belief?
+
+5. THE FOUNDER'S BLIND SPOT:
+Based on the founder's background in context.md, what is the one thing they are most likely to get catastrophically wrong due to their specific experience, personality, or background?
+
+Conclude with: OVERALL DEVIL'S SCORE [X/10] where 10 = "There is no good reason this company should exist."` }
+  ]
+},
+{
+  pillar:"PE", code:"E4", title:"The Moat Blueprint", badge:"unique",
+  execOrder:31, deps:["context.md","A3","B1","C1"], needsProgressive:false,
+  desc:"Assess all 7 moat types and define Year 1 actions to start building one.",
+  prompts:[
+    { id:"E4.1", title:"7-Moat Assessment & Building Plan",
+      text:`You are a competitive strategy expert who has studied Warren Buffett's moat framework applied to early-stage Indian startups. You are ruthlessly honest about which moats are actually available to a startup at this stage.
+
+${ctx()}
+Reference A3 competitor analysis, B1 business model, C1 GTM.
+
+Assess all 7 moat types for this specific startup:
+
+1. NETWORK EFFECTS: Does the product get more valuable as more people use it? Direct or indirect network effect? How long to reach the critical mass where the moat becomes defensible?
+
+2. SWITCHING COSTS: How painful is it for a customer to leave this product after 6 months of use? What makes it sticky (data lock-in, workflow integration, relationship, learning curve)?
+
+3. COST ADVANTAGES: Can this startup produce or deliver the same outcome at a structurally lower cost than competitors? Why? (Technology, sourcing, geography, automation)
+
+4. INTANGIBLE ASSETS: Brand, patents, trade secrets, exclusive licenses, regulatory approvals — which of these is buildable in this industry?
+
+5. DATA MOAT: Does usage generate proprietary data that improves the product and is hard for competitors to replicate?
+
+6. EFFICIENT SCALE: Is this a market where the first player to reach critical mass can serve the whole market, making it uneconomical for a second entrant? (Natural monopoly dynamics)
+
+7. REGULATORY MOAT: Licences, certifications, or approvals that take years to obtain and create barriers to entry.
+
+For each moat: AVAILABLE? (Yes/No/Potentially) + YEAR 1 ACTION to begin building it + REAL INDIAN STARTUP EXAMPLE.
+
+VERDICT: Which ONE moat is most accessible and most important for this specific startup to build first?` }
+  ]
+},
+{
+  pillar:"PE", code:"E5", title:"The Pivot Tree", badge:"unique",
+  execOrder:32, deps:["context.md","P2","A2","B1"], needsProgressive:false,
+  desc:"Map 3 levels of pivot options if core assumptions fail.",
+  prompts:[
+    { id:"E5.1", title:"Full Pivot Tree Mapping",
+      text:`You are a startup pivot strategist. You have guided 15 founders through pivots — some successful, some too late. You know that the best pivots preserve assets (customers, code, team, brand) while changing direction.
+
+${ctx()}
+Reference P2 assumption inventory and B1 business model.
+
+Build the Pivot Tree:
+
+CORE IDEA: [State it]
+↓ IF ASSUMPTION A FAILS (customer doesn't pay):
+→ PIVOT 1: [Adjacent idea that keeps the same customer base but changes monetisation. Keep 80% of what's been built.]
+  - What changes: product / pricing / customer / distribution
+  - What is preserved: [list]
+  - Time to pivot: X weeks
+  - Capital required: ₹X
+
+↓ IF ASSUMPTION B FAILS (market is too small):
+→ PIVOT 2: [Medium-distance pivot — different customer segment but same technology or distribution. Keep 50% of what's been built.]
+  - Same format as above
+
+↓ IF THE ENTIRE MARKET THESIS IS WRONG:
+→ PIVOT 3: [Completely different direction — same founding team skills, different problem. Keep 20% — the team's skills and learnings.]
+  - What unique capabilities does this team retain?
+  - What is the fastest path to a paying customer using those capabilities?
+
+For each pivot level: The TRIGGER (what signal means it's time to pivot), the WINDOW (how long before this pivot is no longer viable), and ONE EXAMPLE of an Indian startup that successfully executed this type of pivot.` }
+  ]
+},
+{
+  pillar:"PE", code:"E6", title:"Copycat Defense Strategy", badge:"unique",
+  execOrder:33, deps:["context.md","A3","E4"], needsProgressive:false,
+  desc:"Assess copyability, define the defensive window, and prepare for Reliance.",
+  prompts:[
+    { id:"E6.1", title:"Copycat Risk & Defense Playbook",
+      text:`You are a competitive defense consultant who specifically studies how Indian startups get copied — by Reliance, Tata, funded clones, or Chinese app dumps. You know exactly how long a window lasts and what to do in it.
+
+${ctx()}
+Reference A3 competitor analysis and E4 moat blueprint.
+
+Assess and deliver:
+
+1. COPYABILITY SCORE [1–10]: How easy is this idea to copy?
+   1 = Deep technology moat, takes years to replicate
+   10 = Any 3-person team with ₹50L could copy this in 60 days
+   Justify the score with specific barriers and vulnerabilities.
+
+2. REPLICATION TIMELINE: How long before a well-funded competitor (assume ₹5Cr budget) can launch a competing product? Month X is when the window closes.
+
+3. THE RELIANCE SCENARIO: If Reliance Jio / JioCinema / JioMart decided to enter this exact niche — what would happen? Could this startup survive, partner, or would it be crushed? What would trigger Reliance to make that move?
+
+4. THE 3 WINDOW ACTIONS:
+   In the time before a funded competitor replicates, what are the 3 most important defensive moves?
+   - Lock exclusive [supply/distribution/partnership]: specifically, with whom and how?
+   - Build community loyalty: what mechanism makes customers emotionally invested?
+   - Sign long-term contracts: which customers to lock in, with what terms?
+
+5. FIGHT / PARTNER / SELL DECISION: If a large player copies this startup after it gains traction — what is the right strategic response?
+
+6. INDIA EXAMPLES: 2 Indian startups that successfully defended against a well-funded copycat — what did they do?` }
+  ]
+},
+
+// ── PILLAR F ──────────────────────────────────────────────────────────────
+{
+  pillar:"PF", code:"F1", title:"Founder-Market Fit Assessment", badge:"unique",
+  execOrder:27, deps:["context.md"], needsProgressive:false,
+  desc:"Assess background match, skill gaps, and co-founder profile needed.",
+  prompts:[
+    { id:"F1.1", title:"Founder-Market Fit Deep Assessment",
+      text:`You are a seed-stage partner at an India-focused VC fund. The single most important criterion for your investment decision at this stage is founder-market fit — not the idea itself.
+
+${ctx()}
+
+Produce a thorough founder-market fit assessment:
+
+1. BACKGROUND MATCH SCORE [1–10]: Does this founder's professional history, educational background, or personal experience give them genuine insight into this problem? Justify with specifics from context.md.
+
+2. DOMAIN KNOWLEDGE: What does this founder know about this market that a smart generalist would NOT know? Name 3 specific things.
+
+3. UNFAIR ACCESS: Does the founder have relationships, networks, or institutional access that gives them a structural advantage in this market?
+
+4. EXECUTION EVIDENCE: What has this founder already shipped, built, or sold? Does their history suggest they can execute, or only ideate?
+
+5. SKILLS GAP ANALYSIS:
+   Critical skills needed to succeed: [list for this specific startup]
+   Skills the founder has: [from context.md]
+   Missing skills: [the gap]
+   How to close each gap: Hire / Partner / Learn / Advisor
+
+6. CO-FOUNDER PROFILE NEEDED: If the founder is technical — describe the ideal business co-founder. If business — describe the ideal technical co-founder. Be specific: what industry experience, what skills, where to find this person in India.
+
+7. OVERALL FOUNDER-MARKET FIT: Strong / Moderate / Weak — and what it would take to move to the next level.` }
+  ]
+},
+{
+  pillar:"PF", code:"F2", title:"Unfair Advantage Finder", badge:"unique",
+  execOrder:28, deps:["context.md","F1"], needsProgressive:false,
+  desc:"Uncover the single biggest advantage no competitor can replicate.",
+  prompts:[
+    { id:"F2.1", title:"Unfair Advantage Discovery & Weaponisation",
+      text:`You are a founder coach who has helped 50 first-time founders discover the one thing they can do better than anyone else — and then build their entire go-to-market strategy around it.
+
+${ctx()}
+Reference F1 founder-market fit assessment.
+
+Discover and weaponise the founder's unfair advantage:
+
+1. THE ADVANTAGE AUDIT — examine each of these for the founder:
+   - Professional relationships (who do they know that others don't?)
+   - Domain scar tissue (what painful professional lesson gives them insight?)
+   - Geographic or community access (what community do they have insider access to?)
+   - Technical skills (what can they build that would cost others 3× more?)
+   - Distribution access (what existing audience or channel do they already have?)
+   - Regulatory or credential advantage (any licence, certification, or trust signal others lack?)
+   - Language or cultural access (vernacular market access, diaspora connections, etc.)
+
+2. THE SINGLE UNFAIR ADVANTAGE: From the audit above, identify the one advantage that is most genuine, most defensible, and most relevant to this specific market.
+
+3. HOW TO WEAPONISE IT IN:
+   - Marketing: How does this advantage become the core brand story?
+   - Sales: How does it shorten the sales cycle or increase close rate?
+   - Product: How does it inform a feature or workflow that competitors can't easily copy?
+   - Fundraising: How do you communicate it to investors in one compelling sentence?
+
+Output: The Unfair Advantage One-Liner — a single sentence the founder uses in every introduction.` }
+  ]
+},
+{
+  pillar:"PF", code:"F3", title:"Founder Psychological Profile", badge:"unique",
+  execOrder:29, deps:["context.md"], needsProgressive:false,
+  desc:"Identify dominant founder type, blind spots, and delegation map.",
+  prompts:[
+    { id:"F3.1", title:"Founder Psychology & Delegation Map",
+      text:`You are an executive coach who works exclusively with startup founders. You have used psychological profiling to help founders understand their decision-making patterns and avoid their characteristic failures.
+
+${ctx()}
+
+Based on the founder's background and stated approach:
+
+1. DOMINANT FOUNDER TYPE (assess across 4 types):
+   VISIONARY: Sees the future, sells the dream, struggles with detail and follow-through
+   EXECUTOR: Gets things done, systems-oriented, struggles with pivoting and big-picture thinking
+   RELATIONSHIP BUILDER: Builds teams and partnerships, struggles with hard decisions and confrontation
+   ANALYST: Data-driven, rigorous, struggles with speed and decisiveness
+
+   Which is the PRIMARY type? Which is the SECONDARY type? (Rarely pure — assign percentages.)
+
+2. SPECIFIC BLIND SPOTS for this founder's dominant type:
+   List 3 decisions this founder type characteristically makes poorly.
+   For each: the specific trigger, the typical outcome, and a decision rule to prevent it.
+
+3. DELEGATION MAP:
+   Decisions to MAKE YOURSELF: (play to their strengths)
+   Decisions to DELEGATE: (blind spot territory — who should handle this?)
+   Decisions to AVOID ENTIRELY: (the ones this type makes the worst — create a rule to never make these unilaterally)
+
+4. DAILY PRACTICE:
+   One specific daily or weekly habit that counteracts this founder's primary weakness. Not generic advice — tailored to their type.
+
+5. CO-FOUNDER COMPATIBILITY: Based on the dominant type, what founder type makes the best co-founder for this person? What type would be a disaster?` }
+  ]
+},
+{
+  pillar:"PF", code:"F4", title:"The Conversation Intelligence Report", badge:"unique",
+  execOrder:30, deps:["context.md","A4","P1"], needsProgressive:false,
+  desc:"Complete discovery call script, signal recognition guide, and scoring sheet.",
+  prompts:[
+    { id:"F4.1", title:"Customer Discovery Script & Signal Guide",
+      text:`You are a User Research Lead who has conducted 500+ customer discovery interviews. You know that most founders conduct discovery interviews that make them feel good but teach them nothing — because they lead the witness or ask opinions instead of uncovering behaviour.
+
+${ctx()}
+Reference A4 customer personas and P1 problem statement.
+
+Produce a complete Conversation Intelligence Report:
+
+PART 1 — THE 8 CORE QUESTIONS (specific to this startup idea):
+For each question:
+- The question (behavioral, not opinion-based — "when did you last" not "would you ever")
+- What you are ACTUALLY trying to learn
+- What a GENUINE answer sounds like (specific, unprompted, emotional)
+- What a POLITE LIE sounds like (vague, forward-looking, non-committal)
+
+PART 2 — THE WTP QUESTION:
+The one question that reveals real willingness to pay. For India: "If I could set this up for you by [date] for ₹[price], can I take your contact details and send you an invoice right now?" — How to phrase it. What response constitutes a yes. What to do if they say no.
+
+PART 3 — CALL STRUCTURE (20-minute discovery call):
+- Minutes 0–3: Rapport and context setting
+- Minutes 3–15: The 8 questions
+- Minutes 15–18: WTP question
+- Minutes 18–20: Next steps and referral ask
+
+PART 4 — SCORING SHEET:
+After each call, rate the prospect on: Problem intensity (1–5), Current spend on workarounds (1–5), Urgency to solve (1–5), Authority to buy (1–5), Willing to pay your price (1–5).
+Total score out of 25. Score ≥ 18: Hot prospect. 12–17: Nurture. < 12: Move on.` }
+  ]
+},
+{
+  pillar:"PF", code:"F5", title:"The 48-Hour Launch Challenge", badge:"unique",
+  execOrder:34, deps:["context.md","A4","C1"], needsProgressive:false,
+  desc:"Hour-by-hour validation plan under ₹2,000 with no code required.",
+  prompts:[
+    { id:"F5.1", title:"48-Hour Zero-Code Validation Plan",
+      text:`You are a lean startup coach who believes the only valid test is an actual buying signal — not a survey, not an interview, not a "would you use this" response.
+
+${ctx()}
+
+Design a 48-hour plan to test the core business hypothesis with no code and under ₹2,000:
+
+HOUR 1–2: Build the landing page using Carrd (₹0) or Typedream (₹0):
+- Exact headline (use the positioning statement from the brand section)
+- 3 bullet benefits (use JTBD language from A4)
+- One call to action: "Join the waitlist" or "Book a free demo" or "Order now"
+- Collect: Name, phone, email
+
+HOUR 3–4: Write the outreach messages:
+- WhatsApp message (under 100 words) to send to 50 contacts
+- LinkedIn DM for professional ICP
+- Message for relevant WhatsApp groups (non-spammy, gives value first)
+
+HOUR 5–6: Set up tracking:
+- Google Form for interest capture (free)
+- Simple spreadsheet to track responses
+- What to note in each conversation
+
+HOURS 7–48: Execute the outreach. Every 12 hours, update the spreadsheet.
+
+THRESHOLDS:
+GO SIGNAL: [X] people express interest or sign up in 48 hours from [Y] outreach attempts
+RETHINK SIGNAL: Fewer than [X] — what to change before trying again
+
+WHAT COUNTS AS A REAL SIGNAL: Not "sounds interesting." Real signals: gives contact details, asks "when can I start?", offers to pay immediately, asks for a referral to share.
+
+India-specific: How to use Google Pay or UPI to take a ₹100 "commitment deposit" as the strongest possible buying signal.` }
+  ]
+},
+{
+  pillar:"PF", code:"F6", title:"Investor Readiness Score", badge:"unique",
+  execOrder:40, deps:["progressive.md"], needsProgressive:true,
+  desc:"Score across 8 investor dimensions, current gaps, and 60-day improvement plan.",
+  prompts:[
+    { id:"F6.1", title:"Investor Readiness Assessment",
+      text:`You are a venture capital partner who has heard 1,000 pitches. You score every founder and startup across 8 dimensions before deciding whether to take a second meeting.
+
+${prog()}
+
+Score this startup across 8 investor dimensions (each out of 12.5 for a total of 100):
+
+1. TEAM: Does the team have the right skills, experience, and founder-market fit?
+2. MARKET: Is the market large enough, growing fast enough, and entering at the right time?
+3. PROBLEM/SOLUTION FIT: Is the problem real and urgent? Is the solution clearly better than alternatives?
+4. TRACTION: What proof exists that customers want this? (Waitlist, revenue, LOIs, pilots)
+5. BUSINESS MODEL: Is the unit economics story believable? Is there a path to profitability?
+6. COMPETITIVE ADVANTAGE: Is there a defensible moat or at least an early asymmetric advantage?
+7. GO-TO-MARKET: Is the customer acquisition strategy credible and capital-efficient?
+8. STORY & VISION: Is this a compelling narrative? Why will this startup win and why does it matter?
+
+For each dimension: Current score based on research findings + what score is needed before approaching investors + the single action to improve this score the most.
+
+TOTAL CURRENT SCORE: X/100
+TARGET SCORE TO RAISE: 65+/100 for angels, 75+/100 for institutional seed
+
+3 SPECIFIC ACTIONS to raise the score by 20 points in 60 days.
+
+INVESTOR TYPE RECOMMENDATION at current score: Friends & Family / Angel / Micro-VC / Top-tier VC — based on what the market will bear right now.` }
+  ]
+},
+{
+  pillar:"PF", code:"F7", title:"Emotional Readiness Check", badge:"unique",
+  execOrder:35, deps:["context.md"], needsProgressive:false,
+  desc:"Financial runway, support system, fear mapping, and first-6-months reality brief.",
+  prompts:[
+    { id:"F7.1", title:"Founder Emotional Readiness Assessment",
+      text:`You are an experienced startup mentor who has watched brilliant ideas fail because the founder underestimated the emotional weight of building a company. You are also aware of how building a startup in India — with family pressure, financial conservatism, and social expectations — is uniquely different from the US or European context.
+
+${ctx()}
+
+Conduct an honest emotional readiness assessment:
+
+1. FINANCIAL POSITION:
+   Can this founder sustain 18 months with zero income? If no — how many months is realistic?
+   What is the financial floor that triggers them to "get a job"? (Naming this is protective, not defeatist.)
+   Are there India-specific financial obligations (family support, EMIs, arranged marriage timeline pressures) that affect runway?
+
+2. SUPPORT SYSTEM:
+   Is there a co-founder, partner, or close friend/mentor who will be honest when things are going badly?
+   The most dangerous state for a founder is: working alone, getting good reactions at demos, but not closing actual customers.
+
+3. FEAR MAPPING:
+   The biggest fear the founder is likely carrying (based on context.md) — state it plainly.
+   Is this fear RATIONAL (based on a real risk) or IRRATIONAL (based on imagined catastrophe)?
+   If rational: what is the mitigation strategy?
+   If irrational: what is the reframe that reduces its power?
+
+4. WHAT THE FIRST 6 MONTHS ACTUALLY FEEL LIKE:
+   Write a realistic, honest description of what the founder will experience emotionally in the first 6 months. Not a motivational speech. The real experience — including the loneliness, the rejection, the uncertainty — so they are not blindsided.
+
+5. WORST REALISTIC OUTCOME:
+   "If everything goes wrong — not catastrophically, but realistically wrong — the worst outcome is: [X]."
+   Is that survivable? Does naming it reduce its power?
+
+Final line: Your readiness verdict and the one non-negotiable preparation step before launch.` }
+  ]
+},
+
+// ── PILLAR G ──────────────────────────────────────────────────────────────
+{
+  pillar:"PG", code:"G1", title:"Market Sizing from Scratch", badge:"prompt",
+  execOrder:41, deps:["progressive.md"], needsProgressive:true,
+  desc:"Consulting-grade market sizing with top-down and bottom-up.",
+  prompts:[
+    { id:"G1.1", title:"Consulting-Grade Market Sizing Prompt",
+      text:`ROLE: You are a Senior Market Research Analyst at McKinsey who has produced market sizing slides for Fortune 500 clients entering new markets.
+
+${prog()}
+
+For the startup idea in context.md:
+
+Produce a dual market sizing analysis:
+
+TOP-DOWN:
+- Start from the broadest relevant industry category with a cited market report
+- Apply progressive filters down to the exact addressable segment
+- Show every filter and the assumption behind it
+- Flag the 2 assumptions where the estimate is weakest
+
+BOTTOM-UP:
+- Define the unit of revenue
+- Count the addressable units in India with sources
+- Apply realistic capture rate for Years 1–3
+
+CROSS-CHECK:
+- Do the two methods produce directionally consistent results?
+- If they differ by more than 3×, explain why and which is more trustworthy
+
+INVESTOR-READY FORMAT:
+- TAM (India): ₹X Cr
+- SAM: ₹X Cr
+- SOM Year 1: ₹X Cr | SOM Year 3: ₹X Cr
+- CAGR: X% (source: [name])
+
+SENSITIVITY TABLE: Best / Base / Worst case for SOM Year 3.` }
+  ]
+},
+{
+  pillar:"PG", code:"G2", title:"Customer Persona Builder", badge:"prompt",
+  execOrder:42, deps:["progressive.md"], needsProgressive:true,
+  desc:"3 behavioral personas with buying triggers, objections, and ad copy phrases.",
+  prompts:[
+    { id:"G2.1", title:"Behavioral Customer Persona Prompt",
+      text:`ROLE: You are a Consumer Insights Researcher at Goldman Sachs who builds behavioral personas based on observed purchasing patterns, not demographic assumptions.
+
+${prog()}
+
+Build 3 distinct customer personas for this startup. Each persona MUST be based on behavioral patterns observed in the research conducted in progressive.md.
+
+For each persona:
+NAME: [Indian first name, relatable]
+ONE-LINE BIO: What their professional/life context is
+TRIGGERING EVENT: The EXACT moment they start searching for a solution (not "they feel frustrated" but "on the evening of [specific event], they Googled [specific query]")
+CURRENT SPEND: What they spend today on the problem (time AND money — be specific)
+DECISION PROCESS: Who else influences their purchase? How long does it take?
+TOP OBJECTION: Their #1 reason to say NO — and the reframe that overcomes it
+EXACT WORDS: 4 verbatim-style phrases they'd use describing this problem (use for ad copy)
+ACQUISITION CHANNEL: Where this persona is most reachable today at lowest CAC
+
+RULE: Each of the 3 personas must point to a DIFFERENT acquisition channel.` }
+  ]
+},
+{
+  pillar:"PG", code:"G3", title:"Competitor Positioning Map", badge:"prompt",
+  execOrder:43, deps:["progressive.md"], needsProgressive:true,
+  desc:"Customer perception-based positioning map with white space identification.",
+  prompts:[
+    { id:"G3.1", title:"Strategy Consultant Competitor Map Prompt",
+      text:`ROLE: You are a Strategy Consultant who has built competitive positioning maps for 40+ companies. You never use "price vs quality" as axes — you find the 2 axes that are most meaningful for THIS market.
+
+${prog()}
+
+1. CHOOSE THE AXES: Based on the competitor research in progressive.md, identify the 2 dimensions that most meaningfully separate solutions in this market. Explain why these axes — not others.
+
+2. PLOT ALL COMPETITORS: Place each of the 5–8 competitors from A3 on the 2×2. Describe their position in text.
+
+3. WHAT CUSTOMERS ACTUALLY SAY: For each competitor, cite 1 real customer review quote (from G2/Capterra/Reddit) that reveals their true positioning as perceived by users — not their marketing claim.
+
+4. WHITE SPACE ANALYSIS: Where on the map is there no competitor? Is the white space empty because:
+   (a) Nobody has tried it → opportunity
+   (b) People have tried and failed → investigate why before entering
+   (c) Customers don't want it → avoid
+
+5. RECOMMENDED POSITION: Where should this startup position on the map, and what does that mean for product, pricing, and messaging?` }
+  ]
+},
+{
+  pillar:"PG", code:"G4", title:"Pricing Strategy Reverse-Engineering", badge:"prompt",
+  execOrder:44, deps:["progressive.md"], needsProgressive:true,
+  desc:"Right pricing model, Van Westendorp price points, and 3-tier table.",
+  prompts:[
+    { id:"G4.1", title:"Pricing Strategist Deep Dive Prompt",
+      text:`ROLE: You are a Pricing Strategist who has designed monetisation models for 50+ SaaS and marketplace companies across India, with specific expertise in Indian consumer price sensitivity.
+
+${prog()}
+
+1. PRICING MODEL RECOMMENDATION: Which model — per seat, usage-based, flat rate, freemium, transaction fee, outcome-based — fits this product and customer behaviour? Score each option 1–10 and justify.
+
+2. VAN WESTENDORP ANALYSIS: Based on comparable India market pricing data:
+   - Too cheap (triggers quality doubt): below ₹X
+   - Getting cheap (good value signal): ₹X
+   - Getting expensive (hesitation zone): ₹Y
+   - Too expensive (refusal): above ₹Z
+
+3. THE #1 PRICING MISTAKE: What specific error do most startups in this category make with pricing? How to avoid it.
+
+4. 3-TIER PRICING TABLE:
+   | Tier | Name | Price (INR/month) | Who it's for | Key features | Upgrade trigger |
+   Free/Entry | Growth | Pro
+
+5. INDIA-SPECIFIC FACTORS: Annual billing discount, UPI conversion impact, BNPL effect on price sensitivity, regional variation.` }
+  ]
+},
+{
+  pillar:"PG", code:"G5", title:"Industry Trend Report", badge:"prompt",
+  execOrder:45, deps:["progressive.md"], needsProgressive:true,
+  desc:"Quarterly intelligence brief — trends, threats, capital flows, and 12-month prediction.",
+  prompts:[
+    { id:"G5.1", title:"Senior Analyst Intelligence Brief Prompt",
+      text:`ROLE: You are a Senior Analyst at a top-tier consulting firm producing a quarterly intelligence brief for a client entering this market.
+
+${prog()}
+
+Produce a consulting-grade intelligence brief:
+
+TOP 5 TRENDS RESHAPING THIS INDUSTRY (with evidence):
+For each trend: What is it? What's driving it? How fast is it moving? What does it mean for a new entrant?
+
+3 EMERGING THREATS MOST COMPANIES AREN'T TRACKING:
+These are second-order trends — early signals that most market participants are ignoring because they seem distant or unlikely. For each: probability, timeline, and why smart players are already preparing.
+
+WHAT THE SMARTEST PLAYERS ARE DOING DIFFERENTLY:
+Name 2–3 specific companies (Indian or global) that are positioned ahead of the curve on these trends. What exactly are they doing? What can this startup learn?
+
+WHERE CAPITAL IS FLOWING:
+Recent funding rounds in adjacent spaces. M&A signals. IPO pipeline. What are investors betting on in this ecosystem?
+
+12-MONTH HOT TAKE: One bold prediction for this market in the next 12 months. What will be materially different? Assign a probability.
+
+3 STRATEGIC RECOMMENDATIONS for a company entering this space right now.` }
+  ]
+},
+{
+  pillar:"PG", code:"G6", title:"Customer Interview Question Generator", badge:"prompt",
+  execOrder:46, deps:["progressive.md"], needsProgressive:true,
+  desc:"15 behavioral questions that test assumptions without leading the witness.",
+  prompts:[
+    { id:"G6.1", title:"User Research Lead Interview Design Prompt",
+      text:`ROLE: You are a User Research Lead who has conducted 500+ discovery interviews. You know that most founders ask the wrong questions and come away feeling validated when they should feel worried.
+
+${prog()}
+
+Design a 15-question customer interview guide for this specific startup. Rules: ONLY behavioral questions (what they DO, not what they THINK or WOULD do). No leading questions.
+
+For each question:
+Q: [The question]
+WHY: What assumption from P2 are you testing with this?
+GOOD ANSWER LOOKS LIKE: [specific, detailed, unprompted, past-tense]
+BAD ANSWER LOOKS LIKE: [vague, future-tense, conditional — "I would probably…"]
+
+TRAP QUESTIONS (3 questions designed to expose polite dishonesty):
+These are questions where an enthusiastic but non-buying customer will say yes, but a real buyer will respond differently.
+
+INTERVIEW FLOW: How to structure the 15 questions across a 30-minute session.
+
+INDIA-SPECIFIC ADAPTATIONS: Cultural dynamics that affect interview quality in India — saving face, hierarchical deference, joint family decision dynamics. How to compensate.` }
+  ]
+},
+{
+  pillar:"PG", code:"G7", title:"GTM Channel Analysis", badge:"prompt",
+  execOrder:47, deps:["progressive.md"], needsProgressive:true,
+  desc:"8 channels scored on CAC, speed, scalability — with 30-day playbook.",
+  prompts:[
+    { id:"G7.1", title:"Growth Strategist Channel Scoring Prompt",
+      text:`ROLE: You are a Growth Strategist who has run go-to-market for 30+ product launches across India. You score every channel with brutal honesty and show your math.
+
+${prog()}
+
+Score the top 8 acquisition channels for this startup:
+| Channel | Cost efficiency (1–10) | Time to results (1–10) | Scalability (1–10) | Total | Estimated CAC (INR) | Notes |
+
+Channels to evaluate: SEO/Content, Paid Social (Meta), Paid Search (Google), LinkedIn Outreach, WhatsApp/Community, Referral/Word of Mouth, Partnerships/B2B, Offline/Events.
+
+Add India-specific channels where relevant: IndiaMart, ONDC, Regional YouTube, Meesho.
+
+RANKED LIST: Order by expected CAC with math shown for top 3.
+
+30-DAY PLAYBOOK for top 3 channels: Exact first actions, budget allocation, success metrics, kill signals.
+
+THE CHANNEL TO AVOID: Which channel is everyone in this space using but which is actually overpriced or ineffective for this specific ICP? Why?` }
+  ]
+},
+{
+  pillar:"PG", code:"G8", title:"Survey Design That Doesn't Suck", badge:"prompt",
+  execOrder:48, deps:["progressive.md"], needsProgressive:true,
+  desc:"12-question behavioral survey with WTP question and statistical confidence design.",
+  prompts:[
+    { id:"G8.1", title:"Behavioral Science Survey Design Prompt",
+      text:`ROLE: You are a Survey Methodology Expert trained in Behavioral Science who designs surveys that get honest data, not socially desirable responses.
+
+${prog()}
+
+Design a 12-question validation survey for this startup:
+
+STRUCTURE:
+- Q1–2: Screener questions to qualify the target customer. Wrong answers → polite exit.
+- Q3–9: Behavioral questions (what they DO, not what they WOULD DO)
+- Q10: Conjoint analysis question to measure WTP without asking "how much would you pay?"
+- Q11: Trick question — designed to catch random clickers (answering it wrong = flag the response)
+- Q12: Open-ended — "If you could change one thing about how you currently handle [problem], what would it be?"
+
+For each question:
+- The exact question text (India-appropriate language)
+- Type: Multiple choice / Slider / Open text
+- What insight it produces
+- The specific cognitive bias it might trigger and how the question design minimises it
+
+DISTRIBUTION PLAN: 5 specific India communities to share this in (with approach method)
+SAMPLE SIZE: For 95% confidence at ±10% margin, you need X responses.
+EXPECTED COMPLETION TIME: Under X minutes.
+KILL CRITERION: If fewer than X% of respondents report this problem as a frequent pain, the demand assumption fails.` }
+  ]
+},
+{
+  pillar:"PG", code:"G9", title:"SWOT That Drives Decisions", badge:"prompt",
+  execOrder:49, deps:["progressive.md"], needsProgressive:true,
+  desc:"Decision-grade SWOT with 2×2 action matrix and this-quarter priorities.",
+  prompts:[
+    { id:"G9.1", title:"Corporate Strategist SWOT Prompt",
+      text:`ROLE: You are a Corporate Strategist at JP Morgan who builds SWOTs that become the basis for board decisions — not decks that sit in folders.
+
+${prog()}
+
+STRENGTHS: What can this startup do that competitors literally CANNOT COPY in 12 months? Not generic. Reference specific findings from progressive.md.
+
+WEAKNESSES: Based on research, what is the honest reason a customer would choose a competitor? What internal capability gap is most dangerous?
+
+OPPORTUNITIES: What market shift is happening RIGHT NOW (not hypothetically — reference real signals from progressive.md) that this startup can exploit before incumbents wake up?
+
+THREATS: Name 3 SPECIFIC scenarios — not categories — that could kill this business within 24 months. Each scenario should be plausible, not theoretical.
+
+Rate each point: SEVERITY (1–5) × PROBABILITY (1–5) = PRIORITY SCORE.
+
+2×2 ACTION MATRIX:
+STRENGTHS × OPPORTUNITIES → ATTACK MOVES (do in next 90 days)
+WEAKNESSES × THREATS → SURVIVAL MOVES (defend now)
+
+SINGLE MOST IMPORTANT ACTION THIS QUARTER: One sentence. No hedging.` }
+  ]
+},
+{
+  pillar:"PG", code:"G10", title:"Market Entry Feasibility Study", badge:"prompt",
+  execOrder:50, deps:["progressive.md"], needsProgressive:true,
+  desc:"Full feasibility with attractiveness score, barriers, right-to-win, and kill criteria.",
+  prompts:[
+    { id:"G10.1", title:"Market Entry Consultant Feasibility Prompt",
+      text:`ROLE: You are a Market Entry Consultant who has advised Fortune 500 companies entering new markets. You are known for your honesty about right-to-win assessments.
+
+${prog()}
+
+MARKET ATTRACTIVENESS SCORE [X/10]:
+Dimension | Score | Justification
+Market size | | 
+Growth rate | |
+Profitability of incumbents | |
+Competitive intensity | |
+Customer accessibility | |
+Regulatory environment | |
+India infrastructure readiness | |
+
+RIGHT TO WIN [X/10]: Honest assessment — does this team, with this product, at this funding level, have a genuine right to win in this market? What would need to be true?
+
+TOP 3 BARRIERS TO ENTRY:
+For each: nature of the barrier, estimated cost in INR to overcome it, timeline, and whether it gets easier or harder over time.
+
+CAPABILITIES GAPS: What partnerships or capabilities does this startup need that it doesn't currently have?
+
+BREAK-EVEN TIMELINE: Realistic (not best-case) months to break-even with ₹X, ₹Y, ₹Z investment.
+
+KILL CRITERIA: What specific signals — by what dates — should trigger a market exit or fundamental pivot?
+
+FINAL VERDICT: Enter Now / Enter in 12 months / Enter in 24 months / Do Not Enter — with the single most important reason.` }
+  ]
+},
+{
+  pillar:"PG", code:"G11", title:"Brand Positioning Statement Generator", badge:"prompt",
+  execOrder:51, deps:["progressive.md"], needsProgressive:true,
+  desc:"3 positioning options rated on clarity, differentiation, and believability.",
+  prompts:[
+    { id:"G11.1", title:"Brand Strategist Positioning Prompt",
+      text:`ROLE: You are a Brand Strategist who has built 3 billion-dollar brands from scratch. You write positioning statements that make customers feel understood, not marketed to.
+
+${prog()}
+
+Generate 3 positioning statement options using this framework:
+"For [customer] who [need], [product name] is the [category] that [key benefit] unlike [alternative] because [proof point]."
+
+For each option:
+- Write the full positioning statement
+- Rate: Clarity (1–10) — does a 10-year-old understand it?
+- Rate: Differentiation (1–10) — does it say something no competitor says?
+- Rate: Believability (1–10) — is there evidence in progressive.md that supports this claim?
+- Messaging pitfall it avoids: What common startup messaging mistake does this option sidestep?
+- One-liner version: Under 10 words. Homepage hero text.
+
+RECOMMENDATION: Which one to bet money on — and why?
+India adaptation: How does the winning statement need to change for a Hindi or regional language version?` }
+  ]
+},
+{
+  pillar:"PG", code:"G12", title:"Demand Validation Before Building", badge:"prompt",
+  execOrder:52, deps:["progressive.md"], needsProgressive:true,
+  desc:"Problem validation score, 7-day experiment under $500, and kill criteria.",
+  prompts:[
+    { id:"G12.1", title:"Lean Startup Advisor Validation Prompt",
+      text:`ROLE: You are a Lean Startup Advisor who has validated 100+ startup ideas. You have seen every mistake a founder makes in trying to prove demand — and most of them involve confirming what they already believe.
+
+${prog()}
+
+PROBLEM VALIDATION:
+Rate this problem on the vitamin / painkiller / surgery scale. Pull evidence from progressive.md: real forum posts, search volume data, customer interview findings. What score does the evidence actually support (vs what the founder thinks)?
+
+EVIDENCE THAT PEOPLE ACTIVELY SEARCH FOR SOLUTIONS:
+Pull the 3 strongest signals from progressive.md. Rank them from "anyone can fake this" to "this is a genuine buying signal."
+
+SOLUTION VALIDATION:
+Why would a customer choose this solution over their current workaround? What specific evidence from research (not founder belief) supports this claim?
+
+WILLINGNESS TO PAY:
+What alternatives compete at the proposed price point? Is there evidence of actual payment (not survey intent to pay) at this level?
+
+7-DAY VALIDATION EXPERIMENT (under ₹40,000 / $500):
+Design the minimum experiment to get ACTUAL BUYING SIGNALS (not surveys):
+- Day 1–2: Setup
+- Day 3–5: Run
+- Day 6–7: Measure
+What counts as a real signal? What's the conversion threshold that means "build it"?
+
+KILL CRITERIA:
+If after this experiment: [specific result], the founder should STOP and re-examine the core assumption.
+NOT: "we didn't get enough signups." SPECIFIC: fewer than X people took action Y by date Z.` }
+  ]
+},
+
+// A1 RUNS LAST
+{
+  pillar:"PA", code:"A1", title:"Full Validation Report (Executive Summary)", badge:"standard",
+  execOrder:53, deps:["progressive.md — all sections complete"], needsProgressive:true,
+  desc:"Compiled narrative with Go/Pivot/Stop verdict. Generated LAST after all sections complete.",
+  prompts:[
+    { id:"A1.1", title:"Executive Summary & Verdict",
+      text:`You are a Senior Associate at a Tier 1 Indian VC fund. You have just completed a full due diligence process on this startup using every section of research in progressive.md. It is time to write the investment committee memo.
+
+${prog()}
+
+Write the Full Validation Report Executive Summary:
+
+1. THE IDEA IN ONE SENTENCE: What does this startup do, for whom, and why it matters.
+
+2. MARKET OPPORTUNITY:
+   Pull the TAM/SAM/SOM numbers from A2. Is the market large enough and growing fast enough?
+   Market attractiveness score from G10.
+
+3. COMPETITIVE LANDSCAPE:
+   Where does this startup sit relative to competitors (from A3)?
+   The white space it is targeting.
+   Main competitive risk.
+
+4. CUSTOMER & DEMAND:
+   How strong is the demand signal (from A5)?
+   Who is the primary ICP (from A4)?
+   Willingness to pay evidence.
+
+5. BUSINESS MODEL:
+   Revenue model recommendation (from B1).
+   Unit economics in base case: CAC / LTV / Payback.
+   Break-even timeline.
+
+6. GO-TO-MARKET:
+   First channel. First 100 customers strategy.
+   12-month milestone.
+
+7. RISKS:
+   Top 3 risks from E1. Top kill condition.
+
+8. FOUNDER FIT:
+   Founder-market fit score from F1. Key unfair advantage from F2.
+
+9. VERDICT:
+   ✅ GO — "The data supports building this. The top 3 reasons are: [list]"
+   ⚠️ CONDITIONAL — "This is buildable IF: [3 specific conditions]. Validate these before committing."
+   ❌ NO-GO — "The evidence does not support this. The top 3 reasons are: [list]. The pivot recommendation is: [pivot]"
+
+CONFIDENCE SCORE: How confident is this verdict? [High / Medium / Low] — and why.` }
+  ]
+}
+];
+
+// ── RENDER ─────────────────────────────────────────────────────────────────
+
+let activeSection = null;
+
+function getPillar(id) { return PILLARS.find(p => p.id === id); }
+function esc(v) { return String(v).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#39;'); }
+
+// Sections added with "+ Add Section" are saved in this browser only (localStorage).
+const CUSTOM_KEY = 'startup-prompts.custom-sections';
+function loadCustomSections() {
+  try { return JSON.parse(localStorage.getItem(CUSTOM_KEY)) || []; } catch (e) { return []; }
+}
+function saveCustomSections(list) {
+  try { localStorage.setItem(CUSTOM_KEY, JSON.stringify(list)); return true; } catch (e) { return false; }
+}
+
+function renderSidebar() {
+  const nav = document.getElementById('sidebarNav');
+  nav.innerHTML = '';
+  PILLARS.forEach(p => {
+    const secs = SECTIONS.filter(s => s.pillar === p.id);
+    const g = document.createElement('div');
+    g.className = 'pillar-group';
+    g.innerHTML = `<div class="pillar-toggle" onclick="togglePillar(this)">
+      <div class="pillar-dot" style="background:${p.color}"></div>
+      ${p.short} — ${p.name.split(' ')[0]}
+      <span class="chv">▶</span>
+    </div>
+    <div class="pillar-sections hidden" id="pillar-${p.id}">
+      ${secs.map(s => `<div class="section-link ${s.needsProgressive ? 'prog' : ''}" data-code="${s.code}" onclick="selectSection('${s.code}')">
+        <span class="s-code">${s.code}</span>
+        <span class="s-name">${esc(s.title)}</span>
+        ${s.badge === 'new' ? '<span class="s-new"></span>' : ''}
+      </div>`).join('')}
+    </div>`;
+    nav.appendChild(g);
+  });
+}
+
+function togglePillar(el) {
+  el.classList.toggle('open');
+  const content = el.nextElementSibling;
+  content.classList.toggle('hidden');
+}
+
+function selectSection(code) {
+  const sec = SECTIONS.find(s => s.code === code);
+  if (!sec) return;
+  activeSection = code;
+  document.querySelectorAll('.section-link').forEach(l => {
+    l.classList.toggle('active', l.dataset.code === code);
+    const pillar = l.closest('.pillar-group');
+    if (l.dataset.code === code && pillar) {
+      const toggle = pillar.querySelector('.pillar-toggle');
+      const content = pillar.querySelector('.pillar-sections');
+      toggle.classList.add('open');
+      content.classList.remove('hidden');
+    }
+  });
+  renderSection(sec);
+  setNav(false);
+  document.getElementById('mainContent').scrollTop = 0;
+}
+
+function setNav(open) { document.getElementById('app').classList.toggle('nav-open', open); }
+
+function badgeHtml(b) {
+  const map = { new:['badge-new','+ NEW'], unique:['badge-unique','UNIQUE'], india:['badge-india','INDIA'], standard:['badge-standard','STANDARD'], prompt:['badge-prompt','AI PROMPT'] };
+  const [cls, label] = map[b] || map.standard;
+  return `<span class="badge ${cls}">${label}</span>`;
+}
+
+function renderSection(sec) {
+  const pillar = getPillar(sec.pillar);
+  document.getElementById('headerTitle').innerHTML = `${esc(sec.code)}: ${esc(sec.title)} <small>${esc(pillar.name)}</small>`;
+
+  let html = `<div class="section-hero">
+    <div class="section-hero-top">
+      <span class="section-code-badge" style="background:${pillar.color}22;color:${pillar.color};border:1px solid ${pillar.color}44">${sec.code}</span>
+      ${badgeHtml(sec.badge)}
+    </div>
+    <div class="section-big-title">${esc(sec.title)}</div>
+    <div class="section-desc">${esc(sec.desc)}</div>
+    <div class="section-meta">
+      <span class="meta-chip order">⚡ Execution order: ${sec.execOrder}</span>
+      ${sec.deps.map(d => `<span class="meta-chip dep">📎 ${esc(d)}</span>`).join('')}
+    </div>
+  </div>`;
+
+  if (sec.needsProgressive) {
+    html += `<div class="progressive-banner">⚠️ <span><strong>Reads progressive.md</strong> — Run this section AFTER all dependency sections are complete and their outputs have been saved to progressive.md.</span></div>`;
+  }
+
+  html += `<div class="prompts-header"><span>${sec.prompts.length} prompt${sec.prompts.length > 1 ? 's' : ''} in this section</span><span style="color:var(--text3);font-weight:400">Click to expand</span></div>`;
+
+  sec.prompts.forEach((p, i) => {
+    html += `<div class="prompt-card" id="pc-${p.id}">
+      <div class="prompt-card-head" onclick="togglePrompt('${p.id}')">
+        <div class="prompt-num">${p.id}</div>
+        <div class="prompt-title">${esc(p.title)}</div>
+        <button class="copy-btn" onclick="copyPrompt(event,'${p.id}')">⎘ Copy</button>
+      </div>
+      <div class="prompt-body hidden" id="pb-${p.id}">
+        <div class="prompt-text" id="pt-${p.id}">${esc(p.text)}</div>
+      </div>
+    </div>`;
+  });
+
+  document.getElementById('mainContent').innerHTML = html;
+}
+
+function togglePrompt(id) {
+  const body = document.getElementById('pb-' + id);
+  const head = body.previousElementSibling;
+  const open = body.classList.toggle('hidden');
+  head.classList.toggle('open', !open);
+}
+
+function copyPrompt(e, id) {
+  e.stopPropagation();
+  const el = document.getElementById('pt-' + id);
+  const text = el ? el.innerText : '';
+  navigator.clipboard.writeText(text).then(() => {
+    const btn = e.target;
+    btn.textContent = '✓ Copied';
+    btn.classList.add('copied');
+    setTimeout(() => { btn.textContent = '⎘ Copy'; btn.classList.remove('copied'); }, 2000);
+  });
+}
+
+function filterSections(q) {
+  const lq = q.toLowerCase();
+  document.querySelectorAll('.section-link').forEach(el => {
+    const name = el.querySelector('.s-name').textContent.toLowerCase();
+    const code = el.querySelector('.s-code').textContent.toLowerCase();
+    el.style.display = (name.includes(lq) || code.includes(lq)) ? '' : 'none';
+  });
+}
+
+function exportAll() {
+  let out = `# STARTUP INTELLIGENCE REPORT — PROMPT LIBRARY\n# Generated from Blueprint (52 sections, 8 pillars)\n\n`;
+  out += `## HOW TO USE\n- context.md: Created from initial founder intake form\n- progressive.md: Accumulates all research outputs section by section\n- Sections marked "needsProgressive: true" should run LAST\n- Run sections in execution order (lowest number first)\n\n---\n\n`;
+  PILLARS.forEach(p => {
+    const secs = SECTIONS.filter(s => s.pillar === p.id);
+    if (!secs.length) return;
+    out += `# ${p.short}: ${p.name}\n\n`;
+    secs.sort((a,b) => a.execOrder - b.execOrder).forEach(s => {
+      out += `## ${s.code} — ${s.title}\n`;
+      out += `**Badge:** ${s.badge} | **Execution Order:** ${s.execOrder} | **Needs Progressive.md:** ${s.needsProgressive}\n`;
+      out += `**Dependencies:** ${s.deps.join(', ')}\n`;
+      out += `**Description:** ${s.desc}\n\n`;
+      s.prompts.forEach(p => {
+        out += `### ${p.id}: ${p.title}\n\`\`\`\n${p.text}\n\`\`\`\n\n`;
+      });
+      out += `---\n\n`;
+    });
+  });
+  const blob = new Blob([out], { type: 'text/markdown' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url; a.download = 'startup-intelligence-prompts.md';
+  a.click();
+}
+
+// ── MODAL ──────────────────────────────────────────────────────────────────
+
+function openAddModal() {
+  const sel = document.getElementById('addPillar');
+  sel.innerHTML = PILLARS.map(p => `<option value="${p.id}">${p.short} — ${p.name}</option>`).join('');
+  document.getElementById('addModal').classList.remove('hidden');
+}
+
+function closeAddModal() {
+  document.getElementById('addModal').classList.add('hidden');
+}
+
+document.getElementById('addModal').addEventListener('click', function(e) {
+  if (e.target === this) closeAddModal();
+});
+
+function saveNewSection() {
+  const pillarId = document.getElementById('addPillar').value;
+  const code = document.getElementById('addCode').value.trim();
+  const title = document.getElementById('addTitle').value.trim();
+  const desc = document.getElementById('addDesc').value.trim();
+  const badge = document.getElementById('addBadge').value;
+  const execOrder = parseInt(document.getElementById('addOrder').value) || 99;
+  const deps = document.getElementById('addDeps').value.split(',').map(d => d.trim()).filter(Boolean);
+  const needsProgressive = document.getElementById('addProgressive').value === 'true';
+  const pTitle = document.getElementById('addPromptTitle').value.trim();
+  const pText = document.getElementById('addPromptText').value.trim();
+
+  if (!code || !title || !pTitle || !pText) {
+    alert('Please fill in: Section Code, Title, Prompt Title, and Prompt Text.');
+    return;
+  }
+  if (!/^[A-Za-z0-9]+$/.test(code)) {
+    alert('Section Code can only contain letters and numbers (e.g. A9, X1).');
+    return;
+  }
+  if (SECTIONS.some(s => s.code.toLowerCase() === code.toLowerCase())) {
+    alert(`Section code "${code}" already exists. Pick a different code.`);
+    return;
+  }
+
+  const newSection = {
+    pillar: pillarId, code, title, badge, execOrder, deps,
+    needsProgressive, desc: desc || 'Custom section.', custom: true,
+    prompts: [{ id: `${code}.1`, title: pTitle, text: pText }]
+  };
+  SECTIONS.push(newSection);
+  const custom = loadCustomSections();
+  custom.push(newSection);
+  if (!saveCustomSections(custom)) {
+    alert('Section added, but this browser would not let it be saved. It will disappear when you reload the page. Use "Export All" to keep a copy.');
+  }
+
+  renderSidebar();
+  closeAddModal();
+  selectSection(code);
+
+  // Clear form
+  ['addCode','addTitle','addDesc','addOrder','addDeps','addPromptTitle','addPromptText'].forEach(id => { document.getElementById(id).value = ''; });
+}
+
+// ── INIT ───────────────────────────────────────────────────────────────────
+loadCustomSections().forEach(s => {
+  if (s && s.code && !SECTIONS.some(x => x.code === s.code)) SECTIONS.push(s);
+});
+renderSidebar();
+// Open first pillar by default
+document.querySelector('.pillar-toggle').click();
+</script>
+</body>
+</html>
