@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Startup Intelligence — Prompt Library</title>
-<meta name="description" content="52 sections and 69 AI prompts that take a startup idea from problem framing to a go / no-go verdict, with India-specific market, legal and funding research.">
+<meta name="description" content="52 sections and 69 AI prompts that take a startup idea from problem framing to a go / no-go verdict, adapted to whichever country the founder is targeting.">
 <style>
   :root {
     --bg: #0F0F10;
@@ -92,7 +92,7 @@
   .badge { display: inline-flex; align-items: center; gap: 4px; font-size: 10px; font-weight: 600; padding: 3px 8px; border-radius: 20px; letter-spacing: .04em; text-transform: uppercase; }
   .badge-new { background: rgba(124,111,224,0.2); color: var(--accent2); }
   .badge-unique { background: rgba(34,197,94,0.15); color: var(--green); }
-  .badge-india { background: rgba(245,158,11,0.15); color: var(--amber); }
+  .badge-local { background: rgba(245,158,11,0.15); color: var(--amber); }
   .badge-standard { background: var(--surface3); color: var(--text2); }
   .badge-prompt { background: rgba(20,184,166,0.15); color: var(--teal); }
 
@@ -239,7 +239,7 @@
           <select class="form-select" id="addBadge">
             <option value="standard">Standard</option>
             <option value="unique">Unique</option>
-            <option value="india">India</option>
+            <option value="local">Local market</option>
             <option value="new">New Addition</option>
             <option value="prompt">AI Prompt</option>
           </select>
@@ -283,14 +283,14 @@ const PILLARS = [
   { id:"PA", code:"A", name:"Market Intelligence", color:"#3B82F6", short:"Pillar A" },
   { id:"PB", code:"B", name:"Business Model & Financials", color:"#22C55E", short:"Pillar B" },
   { id:"PC", code:"C", name:"Execution & Growth", color:"#F59E0B", short:"Pillar C" },
-  { id:"PD", code:"D", name:"India Infrastructure", color:"#EF4444", short:"Pillar D" },
+  { id:"PD", code:"D", name:"Local Infrastructure", color:"#EF4444", short:"Pillar D" },
   { id:"PE", code:"E", name:"Strategic Defense", color:"#EC4899", short:"Pillar E" },
   { id:"PF", code:"F", name:"Founder Intelligence & Action", color:"#14B8A6", short:"Pillar F" },
   { id:"PG", code:"G", name:"Consulting-Grade Prompts", color:"#8B5CF6", short:"Pillar G" },
 ];
 
-function ctx() { return `Read context.md carefully before responding. It contains the founder's name, startup idea, target customer, location, budget, stage, and team.`; }
-function prog() { return `Read context.md AND progressive.md. progressive.md contains all research outputs generated so far — use it to avoid repeating work and to connect findings across sections.`; }
+function ctx() { return `Read context.md carefully before responding. It contains the founder's name, startup idea, target customer, target market (country or region), local currency, budget, stage, and team. Wherever this prompt says "the target market", use the country or region named in context.md, and give all money amounts in its local currency.`; }
+function prog() { return `Read context.md AND progressive.md. progressive.md contains all research outputs generated so far — use it to avoid repeating work and to connect findings across sections. Wherever this prompt says "the target market", use the country or region named in context.md, and give all money amounts in its local currency.`; }
 
 const SECTIONS = [
 // ── PHASE 0 ──────────────────────────────────────────────────────────────
@@ -395,7 +395,7 @@ Additionally read the P2.1 Assumption Extraction output.
 
 For each FATAL assumption from P2.1:
 1. Design the cheapest, fastest possible experiment to test if it is true
-2. Estimate: time to run, cost in INR, minimum sample size
+2. Estimate: time to run, cost in local currency, minimum sample size
 3. Define a GREEN signal (this assumption is likely true — keep going)
 4. Define a RED signal (this assumption is false — major pivot required)
 5. Define the KILL threshold: what result stops the entire project?
@@ -409,12 +409,12 @@ Final line: "Run experiments in this order. Do NOT proceed to Pillar A research 
 
 // ── PILLAR A ──────────────────────────────────────────────────────────────
 {
-  pillar:"PA", code:"A2", title:"Market Sizing — TAM / SAM / SOM", badge:"india",
+  pillar:"PA", code:"A2", title:"Market Sizing — TAM / SAM / SOM", badge:"local",
   execOrder:3, deps:["context.md"], needsProgressive:false,
-  desc:"Quantify the total market opportunity with India-specific city-tier breakdown.",
+  desc:"Quantify the total market opportunity with a regional / city-tier breakdown for the target market.",
   prompts:[
     { id:"A2.1", title:"Top-Down TAM Sizing",
-      text:`You are a Senior Market Research Analyst at McKinsey who specialises in India market sizing.
+      text:`You are a Senior Market Research Analyst at McKinsey who specialises in sizing markets in the founder's target country.
 
 ${ctx()}
 
@@ -422,7 +422,7 @@ Produce a TOP-DOWN Total Addressable Market analysis:
 1. Start from the broadest relevant industry category. Cite a real market report or data source.
 2. Narrow down to the exact segment this startup addresses using demographic/firmographic filters.
 3. State every assumption used in the narrowing — clearly labeled.
-4. Provide: TAM (global), TAM (India), 5-year CAGR with source.
+4. Provide: TAM (global), TAM (target market), 5-year CAGR with source.
 5. Flag the 2 assumptions where your estimate is weakest and could swing the number by 2×.
 
 Format: Executive summary paragraph + assumptions table + final number with confidence range.` },
@@ -433,25 +433,25 @@ ${ctx()}
 
 Build a BOTTOM-UP model:
 1. Define the unit: one customer / one transaction / one seat — whatever the revenue unit is.
-2. Estimate number of addressable units in India today. Show your math step by step.
+2. Estimate number of addressable units in the target market today. Show your math step by step.
 3. Apply a realistic capture rate for Year 1, Year 2, Year 3 (justify each rate).
-4. Calculate SAM (realistic India segment) and SOM (what this startup can capture in 3 years).
+4. Calculate SAM (realistic target-market segment) and SOM (what this startup can capture in 3 years).
 5. Compare bottom-up SOM to top-down TAM — are they directionally consistent? If not, explain why.
 
-Output: SOM Year 1: ₹X Cr | SOM Year 3: ₹X Cr | SAM: ₹X Cr | TAM India: ₹X Cr
+Output (in local currency): SOM Year 1: X | SOM Year 3: X | SAM: X | TAM (target market): X
 Include a sensitivity table showing best / base / worst case.` },
-    { id:"A2.3", title:"India City-Tier Breakdown",
-      text:`You are a consumer insights analyst specialising in India's multi-speed market.
+    { id:"A2.3", title:"Regional / City-Tier Breakdown",
+      text:`You are a consumer insights analyst who specialises in multi-speed markets, where big cities, smaller cities and rural areas behave very differently.
 
 ${ctx()}
 
-Break down the market opportunity across India's city tiers:
+Break down the market opportunity across the target market's city tiers or regions. Name the actual cities for the target country (for example, in India: Mumbai and Bengaluru vs Jaipur and Indore; in the US: New York and San Francisco vs Columbus and Boise). If the target market is a single city or a small country, break it down by the most meaningful regions or neighbourhoods instead.
 
-TIER 1 (Mumbai, Delhi NCR, Bengaluru, Hyderabad, Chennai, Pune, Kolkata):
+TIER 1 — MAJOR METROS (name them):
 - Market size, growth rate, current penetration of similar solutions
 - Customer profile differences vs other tiers
 
-TIER 2 (Jaipur, Lucknow, Indore, Nagpur, Coimbatore, Bhopal, Surat, etc.):
+TIER 2 — SECONDARY CITIES (name them):
 - Market size, growth rate, digitisation level
 - Infrastructure/logistics/payment challenges
 
@@ -478,7 +478,7 @@ For each of the top 5–8 direct competitors in this space:
 
 | Competitor | Founded | Funding | Target customer | Pricing model | Price point | Top 3 features | #1 customer complaint (from reviews) | Growth signal |
 
-Sources to use for each: G2, Capterra, App Store / Play Store reviews, LinkedIn headcount trends, SimilarWeb traffic direction, IndiaMART / Justdial listings for Indian players.
+Sources to use for each: G2, Capterra, App Store / Play Store reviews, LinkedIn headcount trends, SimilarWeb traffic direction, local business directories and B2B marketplaces (e.g. IndiaMART or Justdial in India, Yelp in the US) for local players.
 
 After the table:
 - Which competitor is growing fastest? Why?
@@ -523,12 +523,12 @@ Who is the ONE competitor that could kill this startup if they entered this exac
   ]
 },
 {
-  pillar:"PA", code:"A4", title:"Target Customer & Persona", badge:"india",
+  pillar:"PA", code:"A4", title:"Target Customer & Persona", badge:"local",
   execOrder:5, deps:["context.md","A3 outputs"], needsProgressive:false,
-  desc:"Build behavioral personas, JTBD map, and an India-specific customer location guide.",
+  desc:"Build behavioral personas, JTBD map, and a customer location guide for the target market.",
   prompts:[
-    { id:"A4.1", title:"Behavioral Persona Builder (India)",
-      text:`You are a Consumer Insights Researcher at Goldman Sachs who has spent 5 years doing ethnographic research in Indian households and small businesses. You build personas based on BEHAVIOR, not demographics.
+    { id:"A4.1", title:"Behavioral Persona Builder",
+      text:`You are a Consumer Insights Researcher at Goldman Sachs who has spent 5 years doing ethnographic research in households and small businesses in the founder's target market. You build personas based on BEHAVIOR, not demographics.
 
 ${ctx()}
 
@@ -566,18 +566,18 @@ SOCIAL JOBS (how they want to be perceived):
 CRITICAL INSIGHT: What is the REAL reason they buy this product — often hidden beneath the functional job? (e.g. "People don't buy a drill, they buy a hole. They don't buy a hole, they buy a picture on the wall.")
 
 Output the insight in one sentence. This sentence should be used in all marketing copy.` },
-    { id:"A4.3", title:"Customer Location Map (India)",
-      text:`You are a growth analyst who specialises in finding Indian startup customers where they actually are — not where you wish they were.
+    { id:"A4.3", title:"Customer Location Map",
+      text:`You are a growth analyst who specialises in finding startup customers where they actually are — not where you wish they were.
 
 ${ctx()}
 
-Map where the ICP (ideal customer profile) for this startup is most reachable in India:
+Map where the ICP (ideal customer profile) for this startup is most reachable in the target market:
 
 DIGITAL CHANNELS:
-- Subreddits (list specific ones with estimated India user base)
+- Subreddits (list specific ones with estimated user base in the target market)
 - WhatsApp communities (what type, how to find them)
-- LinkedIn groups / hashtags used in India
-- Facebook groups (still massive in Tier 2/3)
+- LinkedIn groups / hashtags used in the target market
+- Facebook groups (still large in smaller cities in many countries)
 - Telegram channels
 - YouTube creators they watch
 - Twitter/X accounts they follow
@@ -601,19 +601,19 @@ Output: Prioritised reachability map. For each channel: estimated size, cost to 
   desc:"Find real-world proof that people are actively searching for this solution.",
   prompts:[
     { id:"A5.1", title:"Signal Discovery — Real People, Real Pain",
-      text:`You are a market intelligence researcher. Your job is to find EVIDENCE that real people in India are experiencing this problem and actively looking for solutions — not surveys or projections, but raw behavioral signals.
+      text:`You are a market intelligence researcher. Your job is to find EVIDENCE that real people in the target market are experiencing this problem and actively looking for solutions — not surveys or projections, but raw behavioral signals.
 
 ${ctx()}
 
 Find and present:
 
-1. SEARCH SIGNALS: Google Trends India data for the top 5 keywords related to this problem. Include trend direction (rising/falling) and peak months.
+1. SEARCH SIGNALS: Google Trends data for the target country for the top 5 keywords related to this problem. Include trend direction (rising/falling) and peak months.
 
-2. FORUM SIGNALS: Find 5–10 actual Reddit posts, Quora India answers, or Twitter threads where people describe this exact problem in their own words. Quote the most vivid examples.
+2. FORUM SIGNALS: Find 5–10 actual Reddit posts, Quora answers, or Twitter threads where people describe this exact problem in their own words. Quote the most vivid examples.
 
 3. APP STORE SIGNALS: If competitor apps exist — find reviews that describe unmet needs. Quote 5 reviews that reveal what customers WISH the current solution did.
 
-4. NEWS SIGNALS: Any recent Indian news articles, government reports, or industry data that confirm this problem is real and growing.
+4. NEWS SIGNALS: Any recent local news articles, government reports, or industry data that confirm this problem is real and growing.
 
 5. DEMAND PROXY: Is there any waitlist, community, or petition that already exists for a solution to this problem? If yes, how large?
 
@@ -635,7 +635,7 @@ Rules:
 
 For each question: state the insight you are trying to extract and the potential bias to watch for.
 
-Where to distribute this survey in India: [list 5 specific communities]
+Where to distribute this survey in the target market: [list 5 specific communities]
 Target: 50 responses for signal, 200 for confidence.
 Kill criterion: If fewer than 30% of respondents say they have this problem monthly or more often — the problem frequency assumption is wrong.` }
   ]
@@ -643,7 +643,7 @@ Kill criterion: If fewer than 30% of respondents say they have this problem mont
 {
   pillar:"PA", code:"A6", title:"Timing Score", badge:"unique",
   execOrder:7, deps:["context.md"], needsProgressive:false,
-  desc:"Score whether now is the right moment to enter — with India-specific timing signals.",
+  desc:"Score whether now is the right moment to enter — with timing signals specific to the target market.",
   prompts:[
     { id:"A6.1", title:"Market Timing Full Assessment",
       text:`You are a venture capitalist who has seen the same idea succeed once and fail twice — entirely because of timing. Your job is to score whether the market is ready for this idea RIGHT NOW.
@@ -652,13 +652,13 @@ ${ctx()}
 
 Assess timing across 5 dimensions. Score each 1–10:
 
-1. TECHNOLOGY READINESS: Is the enabling technology (mobile, AI, payments, logistics, APIs) available, affordable, and proven in India?
+1. TECHNOLOGY READINESS: Is the enabling technology (mobile, AI, payments, logistics, APIs) available, affordable, and proven in the target market?
 
 2. REGULATORY ENVIRONMENT: Is the regulatory environment favorable, neutral, or hostile? Has it recently shifted? What's the trajectory?
 
-3. CONSUMER BEHAVIOR SHIFT: Have Indian consumers' habits changed recently in a way that makes this solution more natural to adopt?
+3. CONSUMER BEHAVIOR SHIFT: Have consumers' habits in the target market changed recently in a way that makes this solution more natural to adopt?
 
-4. INFRASTRUCTURE READINESS: Internet penetration, smartphone ownership, UPI adoption, logistics network — does India's infrastructure support this model in target cities?
+4. INFRASTRUCTURE READINESS: Internet penetration, smartphone ownership, digital payments adoption, logistics network — does the target market's infrastructure support this model in target cities?
 
 5. COMPETITIVE WINDOW: How long before a well-funded competitor replicates this? Is there a 12–18 month window of asymmetric advantage?
 
@@ -672,10 +672,10 @@ SINGLE MOST IMPORTANT TIMING SIGNAL TO WATCH: [name it]` }
 {
   pillar:"PA", code:"A7", title:"Shadow Market Report", badge:"unique",
   execOrder:8, deps:["context.md","A2 outputs"], needsProgressive:false,
-  desc:"Research the informal/unorganised version of this market — India's hidden economy.",
+  desc:"Research the informal/unorganised version of this market — the hidden economy that standard research misses.",
   prompts:[
     { id:"A7.1", title:"Informal Market Size & Behaviour",
-      text:`You are an economic anthropologist who has spent years studying India's informal economy. You understand that in India, 60–80% of most markets are served by informal players who are invisible to standard market research.
+      text:`You are an economic anthropologist who has spent years studying informal economies. You understand that in many countries, especially emerging markets, a large share of most markets (often well over half) is served by informal players who are invisible to standard market research.
 
 ${ctx()}
 Reference A2 market sizing outputs.
@@ -694,20 +694,22 @@ Research and answer:
 
 Output: Shadow market size estimate + 3-type informal player profiles + partnership model sketch.` },
     { id:"A7.2", title:"Informal Channel Activation Strategy",
-      text:`You are a growth strategist who built distribution for a B2C startup in Tier 2 India. You know channels that no VC-backed startup uses because they read US playbooks.
+      text:`You are a growth strategist who built distribution for a B2C startup in secondary cities. You know local channels that VC-backed startups ignore because they all copy the same generic playbooks.
 
 ${ctx()}
 
 Design an informal channel activation strategy using channels that competitors are ignoring:
 
-- LOCAL CABLE TV: Which cities? What does a 10-second ad cost? What creative works?
-- AUTO-RICKSHAW / CAB ADVERTISING: Which cities have this infrastructure? Cost per 1,000 impressions?
-- RWA (Resident Welfare Association) BOARDS & GROUPS: How to get listed, who to contact, typical response rate
-- KIRANA STORE PARTNERSHIPS: How similar startups have used kiranas as distribution points
-- REGIONAL LANGUAGE WHATSAPP COMMUNITIES: How to find, join, and engage without being spammy
-- MANDAL / PANCHAYAT NETWORKS: For rural or semi-urban reach — who to contact
+- LOCAL CABLE TV / LOCAL RADIO: Which cities? What does a 10-second ad cost? What creative works?
+- TRANSPORT ADVERTISING (auto-rickshaws, taxis, buses, local transit — whatever exists in the target cities): Cost per 1,000 impressions?
+- RESIDENTIAL COMMUNITY BOARDS & GROUPS (e.g. RWAs in India, HOAs or Nextdoor in the US): How to get listed, who to contact, typical response rate
+- NEIGHBOURHOOD STORE PARTNERSHIPS (e.g. kiranas in India, bodegas in the US, sari-sari stores in the Philippines): How similar startups have used them as distribution points
+- LOCAL-LANGUAGE MESSAGING COMMUNITIES (WhatsApp, Telegram, or whichever app dominates locally): How to find, join, and engage without being spammy
+- COMMUNITY & LOCAL-GOVERNMENT NETWORKS (e.g. panchayats in India, cooperatives, churches, town councils): For rural or semi-urban reach — who to contact
 
-For each: cost estimate (INR), cities where this works best, content format that performs.` }
+Skip channels that don't exist in the target market and add local ones that are missing from this list.
+
+For each: cost estimate (local currency), cities where this works best, content format that performs.` }
   ]
 },
 {
@@ -720,7 +722,7 @@ For each: cost estimate (INR), cities where this works best, content format that
 
 ${ctx()}
 
-List the TOP 5 second-order effects of this startup reaching 100,000 users in India:
+List the TOP 5 second-order effects of this startup reaching 100,000 users in the target market:
 
 For each effect:
 - DESCRIBE the effect clearly (what changes in the world)
@@ -739,12 +741,12 @@ Output: Effects table + 2 highlighted call-outs.` }
 
 // ── PILLAR B ──────────────────────────────────────────────────────────────
 {
-  pillar:"PB", code:"B1", title:"Business Model & Revenue Streams", badge:"india",
+  pillar:"PB", code:"B1", title:"Business Model & Revenue Streams", badge:"local",
   execOrder:10, deps:["context.md","A2","A3","A4"], needsProgressive:false,
-  desc:"Select the right revenue model and produce India-adjusted unit economics.",
+  desc:"Select the right revenue model and produce unit economics adjusted to the target market.",
   prompts:[
     { id:"B1.1", title:"Revenue Model Selection",
-      text:`You are a Pricing Strategist who has designed monetisation models for 50+ SaaS and marketplace companies across India and Southeast Asia.
+      text:`You are a Pricing Strategist who has designed monetisation models for 50+ SaaS and marketplace companies across developed and emerging markets.
 
 ${ctx()}
 
@@ -758,24 +760,24 @@ Evaluate these revenue model options for this specific startup:
 - Advertising / data monetisation
 - B2B2C (sell to businesses who serve consumers)
 
-For each model: Score it 1–10 for fit with (a) India customer payment behaviour (b) this product's value delivery pattern (c) ability to grow LTV over time.
+For each model: Score it 1–10 for fit with (a) customer payment behaviour in the target market (b) this product's value delivery pattern (c) ability to grow LTV over time.
 
 RECOMMENDATION: One primary model + one complementary secondary model.
 Reason in 3 bullets why these two together are optimal.
 Risk in 2 bullets — what could go wrong with this choice.` },
     { id:"B1.2", title:"Pricing Strategy & Benchmarks",
-      text:`You are a pricing consultant using Van Westendorp Price Sensitivity Meter and Gabor-Granger methodology adapted for Indian consumer markets.
+      text:`You are a pricing consultant using Van Westendorp Price Sensitivity Meter and Gabor-Granger methodology adapted to the target market's consumers.
 
 ${ctx()}
 
 Design the pricing strategy:
 
-1. PRICE ANCHORING: What do comparable solutions cost in India? List 5 price points from the competitive landscape.
+1. PRICE ANCHORING: What do comparable solutions cost in the target market? List 5 price points from the competitive landscape.
 
-2. WILLINGNESS TO PAY RANGE: Based on comparable solutions and Indian income levels, estimate:
-   - Too cheap (damages credibility): below ₹X
-   - Acceptable range: ₹X to ₹Y
-   - Too expensive (causes rejection): above ₹Z
+2. WILLINGNESS TO PAY RANGE: Based on comparable solutions and income levels in the target market, estimate:
+   - Too cheap (damages credibility): below X
+   - Acceptable range: X to Y
+   - Too expensive (causes rejection): above Z
 
 3. RECOMMENDED PRICING TIERS (3-tier structure):
    - Free / Entry tier: what's included, what's the hook
@@ -784,9 +786,9 @@ Design the pricing strategy:
 
 4. THE #1 PRICING MISTAKE: What is the most common pricing error startups make in this category? How to avoid it.
 
-5. INDIA-SPECIFIC ADJUSTMENTS: Annual vs monthly billing preferences, UPI/BNPL impact on conversion, regional price sensitivity differences.` },
+5. LOCAL ADJUSTMENTS: Annual vs monthly billing preferences, impact of local payment methods (e.g. UPI in India, PIX in Brazil, M-Pesa in Kenya) and BNPL on conversion, regional price sensitivity differences.` },
     { id:"B1.3", title:"Unit Economics Model",
-      text:`You are a financial analyst building a unit economics model for a seed-stage investor presentation. You use India-specific cost benchmarks.
+      text:`You are a financial analyst building a unit economics model for a seed-stage investor presentation. You use cost benchmarks from the target market.
 
 ${ctx()}
 Reference B1.1 revenue model and B1.2 pricing.
@@ -807,10 +809,10 @@ PAYBACK PERIOD:
 
 UNIT ECONOMICS SCORECARD:
 | Metric | Conservative | Base | Optimistic |
-| Blended CAC | ₹X | ₹X | ₹X |
-| Monthly Revenue/Customer | ₹X | ₹X | ₹X |
+| Blended CAC | X | X | X |
+| Monthly Revenue/Customer | X | X | X |
 | Gross Margin | X% | X% | X% |
-| LTV | ₹X | ₹X | ₹X |
+| LTV | X | X | X |
 | LTV:CAC Ratio | X:1 | X:1 | X:1 |
 | Payback Period | X months | X months | X months |
 
@@ -846,9 +848,9 @@ Single most important action this quarter — one sentence.` }
   ]
 },
 {
-  pillar:"PB", code:"B3", title:"Financial Projections (3-Year)", badge:"india",
+  pillar:"PB", code:"B3", title:"Financial Projections (3-Year)", badge:"local",
   execOrder:12, deps:["context.md","B1","A2"], needsProgressive:false,
-  desc:"3-year financial model with India cost benchmarks, burn rate, and runway.",
+  desc:"3-year financial model with local cost benchmarks, burn rate, and runway.",
   prompts:[
     { id:"B3.1", title:"3-Year Financial Model",
       text:`You are a startup CFO building a 3-year financial model for a pre-seed startup preparing for its first investor conversation.
@@ -864,15 +866,15 @@ REVENUE MODEL:
 - Revenue per customer using B1.2 pricing
 
 COST STRUCTURE:
-- Fixed costs: salaries (use India market rates), office/tools, software
+- Fixed costs: salaries (use local market rates), office/tools, software
 - Variable costs: cost of delivery per customer, payment processing, customer support
-- Marketing spend as % of revenue (benchmark: Indian startups typically 20–40% early stage)
+- Marketing spend as % of revenue (benchmark: early-stage startups often spend 20–40%; adjust for the target market)
 
 KEY OUTPUTS:
 - Monthly burn rate (Year 1)
 - Break-even month
 - Total capital required to reach break-even
-- Runway at different funding amounts (₹25L / ₹50L / ₹1Cr / ₹2Cr)
+- Runway at different funding amounts (pick 4 realistic pre-seed amounts for the target market, e.g. ₹25L / ₹50L / ₹1Cr / ₹2Cr in India or $50K / $100K / $250K / $500K in the US)
 
 FORMAT: Summary table + 3 scenario comparison + a single paragraph "what has to be true for the base case to hold?"` },
     { id:"B3.2", title:"Bootstrappable vs Investor-Required Assessment",
@@ -885,22 +887,22 @@ Assess and answer:
 
 1. BOOTSTRAPPABLE THRESHOLD: What revenue or milestone does the business need to reach before it becomes self-sustaining? Is that reachable with founder savings?
 
-2. CAPITAL EFFICIENCY SCORE: How many rupees of revenue does this business generate per rupee spent? Compare to benchmarks for similar models.
+2. CAPITAL EFFICIENCY SCORE: How much revenue does this business generate per unit of currency spent? Compare to benchmarks for similar models.
 
 3. FUNDING REQUIREMENT TRIGGER: At what point does external capital accelerate growth vs just keeping the lights on?
 
-4. GRANT ELIGIBILITY: Does this idea qualify for Startup India Seed Fund (max ₹20L), SIDBI, DPIIT grants, or any state government schemes? List specific schemes and eligibility criteria.
+4. GRANT ELIGIBILITY: Does this idea qualify for government startup grants, seed funds or loan schemes in the target market (national and regional)? Examples: Startup India Seed Fund in India, SBIR in the US, Innovate UK grants. List specific schemes and eligibility criteria, and check each is still open.
 
-5. RECOMMENDATION: Bootstrap to ₹X MRR first / Raise ₹X from angels at idea stage / Skip angel, go straight to seed VC — with justification.` }
+5. RECOMMENDATION: Bootstrap to X MRR first / Raise X from angels at idea stage / Skip angel, go straight to seed VC — with justification.` }
   ]
 },
 {
   pillar:"PB", code:"B4", title:"Customer Financing Map", badge:"unique",
   execOrder:13, deps:["context.md","A4","B1"], needsProgressive:false,
-  desc:"Map India-specific affordability bridges — BNPL, EMI, community buying models.",
+  desc:"Map affordability bridges in the target market — BNPL, instalments, community buying models.",
   prompts:[
-    { id:"B4.1", title:"India Affordability & BNPL Integration Map",
-      text:`You are a fintech consultant who has helped 15 Indian startups integrate buy-now-pay-later and EMI options to convert price-sensitive customers.
+    { id:"B4.1", title:"Affordability & BNPL Integration Map",
+      text:`You are a fintech consultant who has helped 15 startups in different countries integrate buy-now-pay-later and instalment (EMI) options to convert price-sensitive customers.
 
 ${ctx()}
 
@@ -908,14 +910,12 @@ Assess affordability as a growth lever:
 
 1. AFFORDABILITY BARRIER CHECK: Is price a genuine adoption blocker for the target customer segment? Estimate the % of ICP for whom the recommended price is unaffordable without financing.
 
-2. BNPL / EMI OPTIONS:
-   - LazyPay: eligibility criteria, integration cost, merchant fee
-   - Simpl: eligibility, use cases, merchant fee
-   - Other BNPL / pay-later providers currently active in India (verify they are still operating)
-   - Credit card EMI via Razorpay/PayU — setup complexity and cost
-   - UPI Credit Line (NPCI's new feature) — what it enables
+2. BNPL / INSTALMENT OPTIONS IN THE TARGET MARKET:
+   - The 3–5 main BNPL / pay-later providers operating there today (e.g. Simpl or LazyPay in India, Klarna or Affirm in the US and Europe, Tabby in the Middle East): eligibility criteria, integration cost, merchant fee. Verify each is still operating.
+   - Card instalments through the main local payment gateways — setup complexity and cost
+   - Credit features built into local payment systems (e.g. credit lines on UPI in India) — what they enable
 
-3. ALTERNATIVE PRICING MODELS FOR INDIA:
+3. ALTERNATIVE PRICING MODELS FOR PRICE-SENSITIVE CUSTOMERS:
    - Pay-per-use (avoid upfront commitment)
    - Community / group buying (10 people share one subscription)
    - Income-share agreement (pay after you earn — used by EdTech)
@@ -941,7 +941,7 @@ Find and analyse 6 comparable startups (3 successes, 3 failures):
 FOR EACH SUCCESS:
 - Company name, country, founded, exit/current status
 - What they got right that others didn't (ONE key insight)
-- Metrics at key milestones (first ₹1Cr revenue, first 10,000 users, Series A)
+- Metrics at key milestones (first meaningful revenue milestone, e.g. ₹1Cr or $100K, first 10,000 users, Series A)
 - What this startup should steal from their playbook
 
 FOR EACH FAILURE:
@@ -959,11 +959,11 @@ And: TYPICAL EXIT MULTIPLES — if this startup succeeds, what are realistic acq
   desc:"Map potential acquirers and build toward the most likely exit from Day 1.",
   prompts:[
     { id:"B6.1", title:"Acquirer Map & Day-1 Exit Strategy",
-      text:`You are an investment banker who has closed 8 startup acquisitions in India. You believe every founder should know who their potential acquirers are before they write a single line of code.
+      text:`You are an investment banker who has closed 8 startup acquisitions. You believe every founder should know who their potential acquirers are before they write a single line of code.
 
 ${ctx()}
 
-Identify the top 5 most likely acquirers if this startup reaches ₹10Cr ARR:
+Identify the top 5 most likely acquirers if this startup reaches meaningful scale (e.g. ₹10Cr or about $1M+ ARR):
 
 For each potential acquirer:
 | Acquirer | Why they would buy | What metrics they care about | Acquisition precedents | Likely offer multiple | Timeline |
@@ -981,12 +981,12 @@ Then:
 
 // ── PILLAR C ──────────────────────────────────────────────────────────────
 {
-  pillar:"PC", code:"C1", title:"Go-to-Market Strategy", badge:"india",
+  pillar:"PC", code:"C1", title:"Go-to-Market Strategy", badge:"local",
   execOrder:16, deps:["context.md","A3","A4","B1"], needsProgressive:false,
-  desc:"GTM phases, channel mix, first 100 customers playbook, India-specific channels.",
+  desc:"GTM phases, channel mix, first 100 customers playbook, channels specific to the target market.",
   prompts:[
     { id:"C1.1", title:"GTM Phasing: Launch → Growth → Scale",
-      text:`You are a Growth Strategist who has led go-to-market for 30+ product launches in India. You know that most GTM strategies fail because they try to do everything at once.
+      text:`You are a Growth Strategist who has led go-to-market for 30+ product launches. You know that most GTM strategies fail because they try to do everything at once.
 
 ${ctx()}
 Reference A4 customer personas, A3 competitor analysis, B1 unit economics.
@@ -997,10 +997,10 @@ PHASE 1 — LAUNCH (Months 1–3):
 Goal: First 50 paying customers.
 Channel(s): Max 2. What are they? Why these? What's the exact first action the founder takes tomorrow?
 Message: The 3 words that describe this product to an ICP. The headline for the landing page.
-Budget: ₹X total. Where does it go?
+Budget: X total. Where does it go?
 
 PHASE 2 — GROWTH (Months 4–12):
-Goal: ₹X MRR. X customers.
+Goal: X MRR. X customers.
 Channels: Expand to 4. Which 2 new ones? Why now?
 What is the referral / word-of-mouth mechanism? How do happy customers bring in the next customer?
 What process gets automated in this phase?
@@ -1010,7 +1010,7 @@ Which channel becomes the primary engine?
 What partnerships unlock distribution at scale?
 What does the team look like? Who handles what?
 
-For India: Specifically call out Meesho, IndiaMart, WhatsApp Business, LinkedIn India, and ONDC — which apply and how?` },
+For the target market: name the specific local marketplaces, B2B directories, messaging apps and open-commerce networks that matter (e.g. in India: Meesho, IndiaMART, WhatsApp Business, ONDC; in the US: Amazon, Etsy, Faire) — which apply and how?` },
     { id:"C1.2", title:"First 100 Customers Playbook",
       text:`You are a sales coach who has helped 50 founders close their first 100 customers. You know it is never done the way people think — it is done with embarrassingly direct outreach, one conversation at a time.
 
@@ -1023,13 +1023,13 @@ STEP 1 — The Founder's Network (Customers 1–10):
 Who in the founder's existing network fits the ICP? How to reach them. What to say. Exact message template.
 
 STEP 2 — Community Seeding (Customers 11–30):
-Which 5 online communities (India-specific) should the founder join this week? What to post. How to start conversations. What NOT to do (avoid spam bans).
+Which 5 online communities (specific to the target market) should the founder join this week? What to post. How to start conversations. What NOT to do (avoid spam bans).
 
 STEP 3 — Direct Outreach (Customers 31–60):
-LinkedIn, WhatsApp, IndiaMart, or Email — which channel for this ICP? Outreach sequence: Day 1, Day 3, Day 7 messages. What personalisation makes these not feel like spam?
+LinkedIn, WhatsApp (or the dominant local messaging app), B2B marketplaces, or Email — which channel for this ICP? Outreach sequence: Day 1, Day 3, Day 7 messages. What personalisation makes these not feel like spam?
 
 STEP 4 — Referral Loop (Customers 61–100):
-Design a referral mechanism that works without heavy tech. What incentive works for Indian customers in this segment? (Discount / recognition / access / cash?)
+Design a referral mechanism that works without heavy tech. What incentive works for customers in this segment in the target market? (Discount / recognition / access / cash?)
 
 Metric to track each week. Kill signal: if fewer than 10 customers in the first 30 days despite running this playbook — what to change?` }
   ]
@@ -1037,31 +1037,31 @@ Metric to track each week. Kill signal: if fewer than 10 customers in the first 
 {
   pillar:"PC", code:"C2", title:"Distribution Arbitrage Finder", badge:"unique",
   execOrder:17, deps:["context.md","A4","C1"], needsProgressive:false,
-  desc:"Find underpriced distribution channels in India that competitors are ignoring.",
+  desc:"Find underpriced distribution channels in the target market that competitors are ignoring.",
   prompts:[
-    { id:"C2.1", title:"India Distribution Arbitrage Map",
-      text:`You are a growth hacker who built a D2C brand to ₹10Cr revenue using only offline and regional digital channels that VC-backed competitors were too snobbish to use.
+    { id:"C2.1", title:"Distribution Arbitrage Map",
+      text:`You are a growth hacker who built a D2C brand to $1M+ revenue using only offline and regional digital channels that VC-backed competitors were too snobbish to use.
 
 ${ctx()}
 Reference A4 customer location map and C1 GTM strategy.
 
 Identify distribution channels that are currently UNDERPRICED or IGNORED by competitors in this market:
 
-For each channel, answer: Current competition level (low/medium/high), Cost per 1,000 impressions or leads in INR, Who is already winning here and how, Exact first step to activate this channel:
+For each channel, answer: Current competition level (low/medium/high), Cost per 1,000 impressions or leads in local currency, Who is already winning here and how, Exact first step to activate this channel:
 
-1. REGIONAL LANGUAGE YOUTUBE: Which languages (Tamil, Telugu, Kannada, Marathi, Bengali) have audiences relevant to this ICP? Estimated creator cost for a sponsored video?
+1. LOCAL-LANGUAGE YOUTUBE: If the target market has several languages (e.g. Tamil, Telugu or Marathi in India; Spanish in the US), which have audiences relevant to this ICP? Estimated creator cost for a sponsored video?
 
-2. HINDI PODCAST ADVERTISING: Which podcasts reach this ICP? Cost per episode mention?
+2. LOCAL-LANGUAGE PODCAST ADVERTISING: Which podcasts reach this ICP? Cost per episode mention?
 
-3. WHATSAPP CHANNEL FEATURE (Meta's 2023 launch): How to build a subscriber base. Content strategy. Monetisation pathway.
+3. WHATSAPP / TELEGRAM CHANNELS (or whichever messaging app dominates locally): How to build a subscriber base. Content strategy. Monetisation pathway.
 
-4. ONDC (Open Network for Digital Commerce): Is this product listable on ONDC? What's the integration process? Who has done it successfully?
+4. LOCAL MARKETPLACES & OPEN-COMMERCE NETWORKS (e.g. ONDC in India): Is this product listable? What's the integration process? Who has done it successfully?
 
-5. RWA / APARTMENT COMPLEX NETWORKS: Which management apps (MyGate, NoBroker) allow targeted communication? Cost? How to access.
+5. APARTMENT / NEIGHBOURHOOD NETWORKS: Which community apps (e.g. MyGate or NoBroker in India, Nextdoor in the US) allow targeted communication? Cost? How to access.
 
-6. TIER 2 CITY OFFLINE: Auto-rickshaw branding, local cable TV, college canteen boards — which of these fits this ICP and what does it cost?
+6. SECONDARY-CITY OFFLINE: Transport branding, local cable TV or radio, college notice boards — which of these fits this ICP and what does it cost?
 
-7. MICRO-INFLUENCER INSTAGRAM (50K–200K followers): Cost per post in INR for India micro-influencers in relevant niches.
+7. MICRO-INFLUENCERS ON INSTAGRAM / TIKTOK (50K–200K followers): Cost per post in local currency for micro-influencers in relevant niches in the target market.
 
 Output: Ranked by COST EFFICIENCY × AUDIENCE FIT. Top 3 to activate in first 90 days.` }
   ]
@@ -1092,7 +1092,7 @@ BUILD: Only features where automation is critical to the test.
 
 MINIMUM FEATURE SET: What 3–5 things must the MVP do on Day 1?
 
-NO-CODE PATH: Can this MVP be built without a technical co-founder using tools like Bubble, Webflow, Glide, Notion + Zapier, or Typeform? If yes, which combination? Estimated setup time and monthly cost in INR.
+NO-CODE PATH: Can this MVP be built without a technical co-founder using tools like Bubble, Webflow, Glide, Notion + Zapier, or Typeform? If yes, which combination? Estimated setup time and monthly cost in local currency.
 
 BUILD ORDER: What gets built first, second, third? Why?` },
     { id:"C3.2", title:"Tech Stack & Build vs Buy Decisions",
@@ -1101,14 +1101,14 @@ BUILD ORDER: What gets built first, second, third? Why?` },
 ${ctx()}
 Reference C3.1 MVP scope.
 
-Recommend a tech stack for this startup with India-specific considerations:
+Recommend a tech stack for this startup with considerations specific to the target market:
 
 FRONTEND: Which framework / no-code tool? Why? Cost?
 BACKEND: Which platform / BaaS (Supabase, Firebase, AWS Amplify)? Why?
 DATABASE: What type and provider? Cost at scale?
-PAYMENTS: Razorpay vs PayU vs Cashfree vs Stripe — which for this use case and why?
+PAYMENTS: Compare the main payment gateways available in the target market (e.g. Razorpay or Cashfree in India, Stripe or Adyen globally, Paystack in Nigeria) — which for this use case and why?
 AUTHENTICATION: Options and recommendation
-HOSTING: AWS vs GCP vs DigitalOcean vs Vercel — India latency considerations
+HOSTING: AWS vs GCP vs DigitalOcean vs Vercel — latency and data-residency considerations for the target market
 ANALYTICS: What to track from Day 1? Which tool?
 COMMUNICATIONS: WhatsApp Business API vs SMS vs Email — for this customer base
 
@@ -1116,7 +1116,7 @@ BUILD VS BUY DECISIONS:
 For each core function: custom build / use existing SaaS / white-label?
 Evaluate: time to build, ongoing maintenance cost, vendor lock-in risk.
 
-TOTAL ESTIMATED COST: Monthly infrastructure cost at 0, 1,000, and 10,000 users (in INR).
+TOTAL ESTIMATED COST: Monthly infrastructure cost at 0, 1,000, and 10,000 users (in local currency).
 WARNING FLAGS: What technical decisions made in MVP phase are hardest to undo? Which to get right from Day 1?` }
   ]
 },
@@ -1156,8 +1156,8 @@ WEEKS 9–12 (Optimise & Grow):
 - Cut what didn't
 - Prepare for investor conversations (if applicable)
 
-TOOLS TO USE (India-focused, budget-friendly):
-List the exact tool stack for operations, sales, marketing, support — with monthly INR cost.
+TOOLS TO USE (budget-friendly, available in the target market):
+List the exact tool stack for operations, sales, marketing, support — with monthly cost in local currency.
 
 HIRING PLAN: Who is the first hire, when, at what salary level?` }
   ]
@@ -1189,7 +1189,7 @@ The 20 decisions should include critical sequencing choices like:
 
 RED FLAGS: List 5 signs that the founder is doing something out of sequence, with the consequence.
 
-Real examples of Indian startups that failed specifically because of wrong sequencing — use to illustrate the most critical decisions.` }
+Real examples of startups (ideally from the target market) that failed specifically because of wrong sequencing — use to illustrate the most critical decisions.` }
   ]
 },
 {
@@ -1207,8 +1207,8 @@ Find 3 examples of startups or companies in COMPLETELY DIFFERENT industries that
 For each example:
 1. COMPANY: Who they are, what industry, what problem they solved (translated to match the core problem)
 2. THE MECHANISM: Exactly how they solved it — what was the key insight or method?
-3. ADAPTATION: How to apply this mechanism specifically to this startup, given the Indian market context, budget, and stage
-4. COST ESTIMATE: What would it cost in INR to implement this adapted version?
+3. ADAPTATION: How to apply this mechanism specifically to this startup, given the target market context, budget, and stage
+4. COST ESTIMATE: What would it cost (in local currency) to implement this adapted version?
 5. TIMELINE: How long to see results?
 
 Then: THE SINGLE MOST POWERFUL STEAL — which of the 3 playbooks is most applicable and most likely to create asymmetric advantage?
@@ -1217,20 +1217,20 @@ Write a 3-step implementation guide for the chosen steal, specific enough that t
   ]
 },
 {
-  pillar:"PC", code:"C7", title:"SEO & Content Launch Strategy", badge:"india",
+  pillar:"PC", code:"C7", title:"SEO & Content Launch Strategy", badge:"local",
   execOrder:22, deps:["context.md","A4","A5"], needsProgressive:false,
-  desc:"India keyword data, content pillars, first 5 articles, 30-day social calendar.",
+  desc:"Local keyword data, content pillars, first 5 articles, 30-day social calendar.",
   prompts:[
-    { id:"C7.1", title:"India SEO & Content Strategy",
-      text:`You are a Content Strategy Director who has grown 3 Indian SaaS startups from 0 to 100,000 monthly organic visitors. You know Indian SEO is different from US SEO — different search intent, different language mix, different featured snippet opportunities.
+    { id:"C7.1", title:"SEO & Content Strategy",
+      text:`You are a Content Strategy Director who has grown 3 SaaS startups in different countries from 0 to 100,000 monthly organic visitors. You know SEO differs by market — different search intent, different language mix, different featured snippet opportunities.
 
 ${ctx()}
 Reference A4 persona and A5 demand validation.
 
-Produce a complete India SEO and content launch strategy:
+Produce a complete SEO and content launch strategy for the target market:
 
-1. TOP 20 KEYWORDS: Target keywords with India-specific search volume. For each:
-   - Monthly search volume (India)
+1. TOP 20 KEYWORDS: Target keywords with search volume in the target market. For each:
+   - Monthly search volume (target market)
    - Keyword difficulty (estimated)
    - Search intent (informational / transactional / navigational)
    - Whether competitors are ranking for it
@@ -1238,73 +1238,73 @@ Produce a complete India SEO and content launch strategy:
 2. CONTENT PILLARS: 3 content themes that the website should own. Each pillar should be:
    - Aligned to a stage of the buyer journey
    - Ownable (no major media site or well-funded competitor dominates it)
-   - Searchable in India
+   - Searchable in the target market
 
 3. FIRST 5 BLOG POST TITLES: Specific enough to write immediately. Include the target keyword, the format (listicle, how-to, comparison), and the primary persona it serves.
 
-4. 30-DAY SOCIAL CALENDAR TEMPLATE: Week-by-week topics for LinkedIn (if B2B), Instagram (if B2C), and YouTube Shorts. Include optimal posting frequency for Indian startup accounts.
+4. 30-DAY SOCIAL CALENDAR TEMPLATE: Week-by-week topics for LinkedIn (if B2B), Instagram (if B2C), and YouTube Shorts. Include optimal posting frequency for startup accounts in the target market.
 
 5. DISTRIBUTION: How to get the first 1,000 readers to each article without paid promotion.` }
   ]
 },
 {
-  pillar:"PC", code:"C8", title:"Brand Identity Starter Kit", badge:"india",
+  pillar:"PC", code:"C8", title:"Brand Identity Starter Kit", badge:"local",
   execOrder:23, deps:["context.md","A4","B1"], needsProgressive:false,
-  desc:"Brand names, visual identity, trademark check, positioning for India.",
+  desc:"Brand names, visual identity, trademark check, positioning for the target market.",
   prompts:[
     { id:"C8.1", title:"Brand Name & Identity Generation",
-      text:`You are a Brand Strategist who has named 30 Indian startups and knows what makes a brand name stick, travel across Indian languages, and survive trademark search.
+      text:`You are a Brand Strategist who has named 30 startups in different countries and knows what makes a brand name stick, travel across the languages spoken in the target market, and survive trademark search.
 
 ${ctx()}
 
 Generate 5 brand name options with this framework for each:
 - Name
-- Why it works for Indian pronunciation and memory
-- Domain availability (check .com and .in)
-- Linguistic check: does it mean anything negative in Hindi, Tamil, Bengali, Telugu, Kannada?
+- Why it works for local pronunciation and memory
+- Domain availability (check .com and the target country's domain, e.g. .in, .co.uk, .de)
+- Linguistic check: does it mean anything negative in the main languages spoken in the target market (and in English)?
 - Trademark risk assessment (low/medium/high — which existing marks are close?)
 
 Then:
 BRAND ARCHETYPE: Which of the 12 brand archetypes fits this startup's positioning? (Hero / Sage / Creator / Caregiver / Explorer / Jester / Magician / Regular Guy / Lover / Ruler / Outlaw / Innocent)
 Why this archetype? How does it show up in language, visual style, and tone of voice?
 
-TAGLINE OPTIONS: 3 options. Each under 7 words. In English. Must translate well to Hindi.
+TAGLINE OPTIONS: 3 options. Each under 7 words. In English. Must translate well into the target market's main local language(s).
 
 POSITIONING STATEMENT (use this framework):
 "For [ICP] who [pain], [Brand Name] is the [category] that [key benefit] unlike [alternative] because [proof point]."
 
 VISUAL IDENTITY BRIEF: Color palette (3 colors with hex codes) and font pairing rationale. What feeling should the design convey? What should it never look like?
 
-INDIA TRADEMARK FILING: Link to the IP India trademark search. What class to file under. Estimated cost and timeline.` }
+TRADEMARK FILING: The official trademark search for the target country (e.g. IP India, USPTO, EUIPO). What class to file under. Estimated cost and timeline.` }
   ]
 },
 
 // ── PILLAR D ──────────────────────────────────────────────────────────────
 {
-  pillar:"PD", code:"D1", title:"India Legal & Regulatory Compliance", badge:"unique",
+  pillar:"PD", code:"D1", title:"Legal & Regulatory Compliance", badge:"unique",
   execOrder:24, deps:["context.md"], needsProgressive:false,
-  desc:"Full India legal setup guide — entity, DPIIT, sector licences, IP, and costs.",
+  desc:"Legal setup guide for the target country — entity, startup recognition, sector licences, IP, and costs.",
   prompts:[
     { id:"D1.1", title:"Entity Structure & Registration Roadmap",
-      text:`You are a startup lawyer with a practice focused on early-stage Indian companies. You have incorporated 100+ entities and know exactly what founders get wrong in the first 6 months.
+      text:`You are a startup lawyer with a practice focused on early-stage companies in the founder's target country. You have incorporated 100+ entities and know exactly what founders get wrong in the first 6 months.
 
 ${ctx()}
 
 Recommend and justify:
 
-1. ENTITY TYPE: Pvt Ltd vs LLP vs OPC vs Sole Proprietorship — which is right for this startup and WHY? Consider: investor-readiness, tax implications, compliance burden, co-founder equity sharing, foreign capital eligibility.
+1. ENTITY TYPE: Compare the main company types available in the target country (e.g. Pvt Ltd / LLP in India, C-Corp / LLC in the US, Ltd in the UK) — which is right for this startup and WHY? Consider: investor-readiness, tax implications, compliance burden, co-founder equity sharing, foreign capital eligibility.
 
-2. DPIIT STARTUP INDIA RECOGNITION:
-   - Does this startup qualify?
-   - What is the 3-year income tax exemption and how to claim it?
-   - What documentation is required for recognition?
+2. OFFICIAL STARTUP RECOGNITION & TAX BENEFITS:
+   - Is there a government startup recognition programme (e.g. DPIIT / Startup India in India)? Does this startup qualify?
+   - What tax exemptions or credits are available and how to claim them?
+   - What documentation is required?
 
 3. MANDATORY REGISTRATIONS CHECKLIST:
-   - MCA incorporation (timeline, cost)
-   - PAN and TAN
-   - GST registration (threshold and applicable rates for this business)
-   - MSME registration (benefits applicable)
-   - Sector-specific: FSSAI (if food), RBI licence (if fintech), SEBI registration (if investment), DPDP Act 2023 and DPDP Rules (if collecting personal data)
+   - Company incorporation (registry, timeline, cost)
+   - Company tax IDs (e.g. PAN and TAN in India, EIN in the US)
+   - Sales tax / VAT / GST registration (threshold and applicable rates for this business)
+   - Small-business registrations that unlock benefits (e.g. MSME in India)
+   - Sector-specific licences (food safety, financial services, investment advice, health, etc.) and data-protection law (e.g. DPDP in India, GDPR in the EU, CCPA in California)
 
 4. INTELLECTUAL PROPERTY:
    - What to trademark (name, logo, tagline)
@@ -1312,34 +1312,34 @@ Recommend and justify:
    - Copyright protection for software
    - Cost and timeline for each
 
-5. ESTIMATED LEGAL SETUP COST: ₹X to ₹Y. Timeline to be legally operational: X weeks.
+5. ESTIMATED LEGAL SETUP COST: X to Y. Timeline to be legally operational: X weeks.
 
 6. WHAT NOT TO DELAY: Which of these, if left undone, creates legal risk in the first year?` },
-    { id:"D1.2", title:"Angel Tax & Foreign Investment Readiness",
-      text:`You are a CA (Chartered Accountant) specialising in startup funding compliance in India.
+    { id:"D1.2", title:"Investment Tax & Foreign Investment Readiness",
+      text:`You are a chartered accountant specialising in startup funding compliance in the founder's target country.
 
 ${ctx()}
 
 Cover the following:
 
-1. ANGEL TAX ABOLISHMENT (effective FY 2025–26): What changed? Does this now make raising from Indian angels simpler? What safeguards remain?
+1. TAX ON EARLY-STAGE INVESTMENT: How is money raised from angels and VCs taxed in the target country? Are there recent changes (e.g. India abolished its angel tax from FY 2025–26) or investor tax incentives (e.g. SEIS / EIS in the UK, QSBS in the US) the founder should use?
 
 2. FOREIGN DIRECT INVESTMENT:
    - Is this business in a sector with FDI restrictions?
    - Which route: Automatic vs Government approval?
-   - FEMA compliance requirements for foreign capital
-   - RBI reporting requirements post-investment
+   - Foreign-exchange and foreign-investment compliance requirements (e.g. FEMA in India)
+   - Reporting requirements to the central bank or regulator after investment
 
 3. ESOP FRAMEWORK:
    - When to set up an ESOP pool? How large?
    - Tax implications for founders vs employees
-   - Cliff and vesting schedules standard in India
+   - Cliff and vesting schedules standard in the target market
 
 4. SHAREHOLDER AGREEMENT MUST-HAVES:
    - Anti-dilution clauses, drag-along, tag-along, right of first refusal
    - What a first-time founder should insist on vs concede
 
-5. TERM SHEET TRAPS: The 3 most common VC term sheet clauses that Indian founders regret agreeing to at seed stage.` }
+5. TERM SHEET TRAPS: The 3 most common VC term sheet clauses that founders in this market regret agreeing to at seed stage.` }
   ]
 },
 {
@@ -1348,7 +1348,7 @@ Cover the following:
   desc:"Regulations under discussion that will affect this business in the next 24 months.",
   prompts:[
     { id:"D2.1", title:"24-Month Regulatory Horizon Analysis",
-      text:`You are a policy analyst who tracks Indian regulatory developments across TRAI, RBI, SEBI, MCA, DPDP, and MEITY. You brief startup founders on what's coming before it hits.
+      text:`You are a policy analyst who tracks regulatory developments across the main regulators in the founder's target country (e.g. in India: RBI, SEBI, TRAI, MeitY; in the US: SEC, FTC, FDA). You brief startup founders on what's coming before it hits.
 
 ${ctx()}
 
@@ -1375,12 +1375,12 @@ Output: Regulatory risk rating (Low/Medium/High) + a one-page regulatory brief t
   ]
 },
 {
-  pillar:"PD", code:"D3", title:"Indian Funding Landscape & Investor Map", badge:"unique",
+  pillar:"PD", code:"D3", title:"Funding Landscape & Investor Map", badge:"unique",
   execOrder:26, deps:["context.md","B3","F6"], needsProgressive:true,
-  desc:"India-specific investors, government schemes, accelerators, and pitch preparation.",
+  desc:"Investors, government schemes, accelerators, and pitch preparation for the target market.",
   prompts:[
-    { id:"D3.1", title:"India Funding Roadmap & Investor Map",
-      text:`You are a venture capital analyst at a Mumbai-based early-stage fund. You have reviewed 800+ pitch decks and know exactly which investors are active in which sectors.
+    { id:"D3.1", title:"Funding Roadmap & Investor Map",
+      text:`You are a venture capital analyst at an early-stage fund that invests in the founder's target market. You have reviewed 800+ pitch decks and know exactly which investors are active in which sectors.
 
 ${prog()}
 
@@ -1389,22 +1389,23 @@ Based on the startup's stage, sector, and metrics from progressive.md:
 1. FUNDING STAGE RECOMMENDATION: Should this startup be bootstrapped / raise pre-seed / raise seed / go straight to Series A? What milestone triggers each round?
 
 2. TOP 10 RELEVANT INVESTORS:
-   For each: Fund name, focus sector, typical cheque size (INR), portfolio companies in this sector, partner name and contact approach, what they look for that's unique to them.
+   For each: Fund name, focus sector, typical cheque size (local currency), portfolio companies in this sector, which partner covers this sector (verify on the fund's website) and how to get a warm introduction, what they look for that's unique to them.
 
 3. GOVERNMENT SCHEMES:
-   - Startup India Seed Fund Scheme: eligibility, amount (up to ₹20L for POC, ₹50L for commercialisation), application process
-   - SIDBI Fund of Funds: how to access
-   - MUDRA Loan (Tarun category): eligibility and amount
-   - Any state-specific scheme applicable to this industry and state
+   - National startup grants or seed funds (e.g. Startup India Seed Fund in India, SBIR in the US, Innovate UK): eligibility, amount, application process
+   - Government-backed funds of funds or co-investment schemes: how to access
+   - Government-backed small-business loans: eligibility and amount
+   - Any state, provincial or city scheme applicable to this industry and location
+   Check that each scheme is still open.
 
 4. ACCELERATORS & INCUBATORS:
-   - IIM/IIT-based programs in relevant sector
-   - Sector-specific accelerators (fintech → Fintech Valley Vizag, agri → AgriSome, etc.)
-   - International programs with India cohorts (YC, Antler, Founders Factory)
+   - University-based incubators in the target market relevant to this sector
+   - Sector-specific accelerators in the target market
+   - International programs that accept founders from this market (e.g. YC, Antler, Techstars)
 
 5. PITCH DECK OUTLINE: 12-slide structure customised for this specific startup. What each slide should contain based on the research findings in progressive.md.
 
-6. INDIA VALUATION BENCHMARKS: What is a realistic pre-money valuation for this idea at pre-seed, seed, and Series A in India this year?` }
+6. VALUATION BENCHMARKS: What is a realistic pre-money valuation for this idea at pre-seed, seed, and Series A in the target market this year?` }
   ]
 },
 
@@ -1415,7 +1416,7 @@ Based on the startup's stage, sector, and metrics from progressive.md:
   desc:"Top 10 risks ranked by probability × impact with early warnings and mitigations.",
   prompts:[
     { id:"E1.1", title:"Full Risk Register",
-      text:`You are a Risk Officer who has led due diligence for 20+ seed and Series A investments in India. You have seen every type of startup fail — and most failures were predictable.
+      text:`You are a Risk Officer who has led due diligence for 20+ seed and Series A investments. You have seen every type of startup fail — and most failures were predictable.
 
 ${prog()}
 
@@ -1498,7 +1499,7 @@ Conclude with: OVERALL DEVIL'S SCORE [X/10] where 10 = "There is no good reason 
   desc:"Assess all 7 moat types and define Year 1 actions to start building one.",
   prompts:[
     { id:"E4.1", title:"7-Moat Assessment & Building Plan",
-      text:`You are a competitive strategy expert who has studied Warren Buffett's moat framework applied to early-stage Indian startups. You are ruthlessly honest about which moats are actually available to a startup at this stage.
+      text:`You are a competitive strategy expert who has studied Warren Buffett's moat framework applied to early-stage startups. You are ruthlessly honest about which moats are actually available to a startup at this stage.
 
 ${ctx()}
 Reference A3 competitor analysis, B1 business model, C1 GTM.
@@ -1519,7 +1520,7 @@ Assess all 7 moat types for this specific startup:
 
 7. REGULATORY MOAT: Licences, certifications, or approvals that take years to obtain and create barriers to entry.
 
-For each moat: AVAILABLE? (Yes/No/Potentially) + YEAR 1 ACTION to begin building it + REAL INDIAN STARTUP EXAMPLE.
+For each moat: AVAILABLE? (Yes/No/Potentially) + YEAR 1 ACTION to begin building it + REAL STARTUP EXAMPLE (ideally from the target market).
 
 VERDICT: Which ONE moat is most accessible and most important for this specific startup to build first?` }
   ]
@@ -1543,7 +1544,7 @@ CORE IDEA: [State it]
   - What changes: product / pricing / customer / distribution
   - What is preserved: [list]
   - Time to pivot: X weeks
-  - Capital required: ₹X
+  - Capital required: X
 
 ↓ IF ASSUMPTION B FAILS (market is too small):
 → PIVOT 2: [Medium-distance pivot — different customer segment but same technology or distribution. Keep 50% of what's been built.]
@@ -1554,7 +1555,7 @@ CORE IDEA: [State it]
   - What unique capabilities does this team retain?
   - What is the fastest path to a paying customer using those capabilities?
 
-For each pivot level: The TRIGGER (what signal means it's time to pivot), the WINDOW (how long before this pivot is no longer viable), and ONE EXAMPLE of an Indian startup that successfully executed this type of pivot.` }
+For each pivot level: The TRIGGER (what signal means it's time to pivot), the WINDOW (how long before this pivot is no longer viable), and ONE EXAMPLE of a startup (ideally from the target market) that successfully executed this type of pivot.` }
   ]
 },
 {
@@ -1563,7 +1564,7 @@ For each pivot level: The TRIGGER (what signal means it's time to pivot), the WI
   desc:"Assess copyability, define the defensive window, and prepare for Reliance.",
   prompts:[
     { id:"E6.1", title:"Copycat Risk & Defense Playbook",
-      text:`You are a competitive defense consultant who specifically studies how Indian startups get copied — by Reliance, Tata, funded clones, or Chinese app dumps. You know exactly how long a window lasts and what to do in it.
+      text:`You are a competitive defense consultant who specifically studies how startups get copied — by local conglomerates and big tech (e.g. Reliance or Tata in India, Google or Amazon in the US), funded clones, or fast-follower apps from abroad. You know exactly how long a window lasts and what to do in it.
 
 ${ctx()}
 Reference A3 competitor analysis and E4 moat blueprint.
@@ -1572,10 +1573,10 @@ Assess and deliver:
 
 1. COPYABILITY SCORE [1–10]: How easy is this idea to copy?
    1 = Deep technology moat, takes years to replicate
-   10 = Any 3-person team with ₹50L could copy this in 60 days
+   10 = Any 3-person team with a small seed budget could copy this in 60 days
    Justify the score with specific barriers and vulnerabilities.
 
-2. REPLICATION TIMELINE: How long before a well-funded competitor (assume ₹5Cr budget) can launch a competing product? Month X is when the window closes.
+2. REPLICATION TIMELINE: How long before a well-funded competitor (assume a budget of roughly $500K–$1M or the local equivalent) can launch a competing product? Month X is when the window closes.
 
 3. THE RELIANCE SCENARIO: If Reliance Jio / JioCinema / JioMart decided to enter this exact niche — what would happen? Could this startup survive, partner, or would it be crushed? What would trigger Reliance to make that move?
 
@@ -1587,7 +1588,7 @@ Assess and deliver:
 
 5. FIGHT / PARTNER / SELL DECISION: If a large player copies this startup after it gains traction — what is the right strategic response?
 
-6. INDIA EXAMPLES: 2 Indian startups that successfully defended against a well-funded copycat — what did they do?` }
+6. REAL EXAMPLES: 2 startups (ideally from the target market) that successfully defended against a well-funded copycat — what did they do?` }
   ]
 },
 
@@ -1598,7 +1599,7 @@ Assess and deliver:
   desc:"Assess background match, skill gaps, and co-founder profile needed.",
   prompts:[
     { id:"F1.1", title:"Founder-Market Fit Deep Assessment",
-      text:`You are a seed-stage partner at an India-focused VC fund. The single most important criterion for your investment decision at this stage is founder-market fit — not the idea itself.
+      text:`You are a seed-stage partner at a VC fund that invests in the founder's target market. The single most important criterion for your investment decision at this stage is founder-market fit — not the idea itself.
 
 ${ctx()}
 
@@ -1618,7 +1619,7 @@ Produce a thorough founder-market fit assessment:
    Missing skills: [the gap]
    How to close each gap: Hire / Partner / Learn / Advisor
 
-6. CO-FOUNDER PROFILE NEEDED: If the founder is technical — describe the ideal business co-founder. If business — describe the ideal technical co-founder. Be specific: what industry experience, what skills, where to find this person in India.
+6. CO-FOUNDER PROFILE NEEDED: If the founder is technical — describe the ideal business co-founder. If business — describe the ideal technical co-founder. Be specific: what industry experience, what skills, where to find this person in the target market.
 
 7. OVERALL FOUNDER-MARKET FIT: Strong / Moderate / Weak — and what it would take to move to the next level.` }
   ]
@@ -1712,7 +1713,7 @@ For each question:
 - What a POLITE LIE sounds like (vague, forward-looking, non-committal)
 
 PART 2 — THE WTP QUESTION:
-The one question that reveals real willingness to pay. For India: "If I could set this up for you by [date] for ₹[price], can I take your contact details and send you an invoice right now?" — How to phrase it. What response constitutes a yes. What to do if they say no.
+The one question that reveals real willingness to pay. "If I could set this up for you by [date] for [price in local currency], can I take your contact details and send you an invoice right now?" — How to phrase it. What response constitutes a yes. What to do if they say no.
 
 PART 3 — CALL STRUCTURE (20-minute discovery call):
 - Minutes 0–3: Rapport and context setting
@@ -1728,16 +1729,16 @@ Total score out of 25. Score ≥ 18: Hot prospect. 12–17: Nurture. < 12: Move 
 {
   pillar:"PF", code:"F5", title:"The 48-Hour Launch Challenge", badge:"unique",
   execOrder:34, deps:["context.md","A4","C1"], needsProgressive:false,
-  desc:"Hour-by-hour validation plan under ₹2,000 with no code required.",
+  desc:"Hour-by-hour validation plan under $25 (or local equivalent) with no code required.",
   prompts:[
     { id:"F5.1", title:"48-Hour Zero-Code Validation Plan",
       text:`You are a lean startup coach who believes the only valid test is an actual buying signal — not a survey, not an interview, not a "would you use this" response.
 
 ${ctx()}
 
-Design a 48-hour plan to test the core business hypothesis with no code and under ₹2,000:
+Design a 48-hour plan to test the core business hypothesis with no code and under $25 (or the local equivalent):
 
-HOUR 1–2: Build the landing page using Carrd (₹0) or Typedream (₹0):
+HOUR 1–2: Build the landing page using a free website builder (e.g. the free tier of Carrd or Framer):
 - Exact headline (use the positioning statement from the brand section)
 - 3 bullet benefits (use JTBD language from A4)
 - One call to action: "Join the waitlist" or "Book a free demo" or "Order now"
@@ -1761,7 +1762,7 @@ RETHINK SIGNAL: Fewer than [X] — what to change before trying again
 
 WHAT COUNTS AS A REAL SIGNAL: Not "sounds interesting." Real signals: gives contact details, asks "when can I start?", offers to pay immediately, asks for a referral to share.
 
-India-specific: How to use Google Pay or UPI to take a ₹100 "commitment deposit" as the strongest possible buying signal.` }
+Local payments: How to use the most common local payment method (e.g. UPI in India, PayPal or Venmo in the US, M-Pesa in Kenya) to take a small "commitment deposit" as the strongest possible buying signal.` }
   ]
 },
 {
@@ -1801,7 +1802,7 @@ INVESTOR TYPE RECOMMENDATION at current score: Friends & Family / Angel / Micro-
   desc:"Financial runway, support system, fear mapping, and first-6-months reality brief.",
   prompts:[
     { id:"F7.1", title:"Founder Emotional Readiness Assessment",
-      text:`You are an experienced startup mentor who has watched brilliant ideas fail because the founder underestimated the emotional weight of building a company. You are also aware of how building a startup in India — with family pressure, financial conservatism, and social expectations — is uniquely different from the US or European context.
+      text:`You are an experienced startup mentor who has watched brilliant ideas fail because the founder underestimated the emotional weight of building a company. You are also aware of how the founder's local culture — family pressure, financial conservatism, social expectations — shapes what building a startup feels like.
 
 ${ctx()}
 
@@ -1810,7 +1811,7 @@ Conduct an honest emotional readiness assessment:
 1. FINANCIAL POSITION:
    Can this founder sustain 18 months with zero income? If no — how many months is realistic?
    What is the financial floor that triggers them to "get a job"? (Naming this is protective, not defeatist.)
-   Are there India-specific financial obligations (family support, EMIs, arranged marriage timeline pressures) that affect runway?
+   Are there financial or family obligations common in the founder's context (supporting family, loan repayments, marriage or other life-event timelines) that affect runway?
 
 2. SUPPORT SYSTEM:
    Is there a co-founder, partner, or close friend/mentor who will be honest when things are going badly?
@@ -1856,7 +1857,7 @@ TOP-DOWN:
 
 BOTTOM-UP:
 - Define the unit of revenue
-- Count the addressable units in India with sources
+- Count the addressable units in the target market with sources
 - Apply realistic capture rate for Years 1–3
 
 CROSS-CHECK:
@@ -1864,9 +1865,9 @@ CROSS-CHECK:
 - If they differ by more than 3×, explain why and which is more trustworthy
 
 INVESTOR-READY FORMAT:
-- TAM (India): ₹X Cr
-- SAM: ₹X Cr
-- SOM Year 1: ₹X Cr | SOM Year 3: ₹X Cr
+- TAM (target market): X
+- SAM: X
+- SOM Year 1: X | SOM Year 3: X
 - CAGR: X% (source: [name])
 
 SENSITIVITY TABLE: Best / Base / Worst case for SOM Year 3.` }
@@ -1885,7 +1886,7 @@ ${prog()}
 Build 3 distinct customer personas for this startup. Each persona MUST be based on behavioral patterns observed in the research conducted in progressive.md.
 
 For each persona:
-NAME: [Indian first name, relatable]
+NAME: [a first name common in the target market, relatable]
 ONE-LINE BIO: What their professional/life context is
 TRIGGERING EVENT: The EXACT moment they start searching for a solution (not "they feel frustrated" but "on the evening of [specific event], they Googled [specific query]")
 CURRENT SPEND: What they spend today on the problem (time AND money — be specific)
@@ -1927,25 +1928,25 @@ ${prog()}
   desc:"Right pricing model, Van Westendorp price points, and 3-tier table.",
   prompts:[
     { id:"G4.1", title:"Pricing Strategist Deep Dive Prompt",
-      text:`ROLE: You are a Pricing Strategist who has designed monetisation models for 50+ SaaS and marketplace companies across India, with specific expertise in Indian consumer price sensitivity.
+      text:`ROLE: You are a Pricing Strategist who has designed monetisation models for 50+ SaaS and marketplace companies across many markets, with specific expertise in consumer price sensitivity in the target market.
 
 ${prog()}
 
 1. PRICING MODEL RECOMMENDATION: Which model — per seat, usage-based, flat rate, freemium, transaction fee, outcome-based — fits this product and customer behaviour? Score each option 1–10 and justify.
 
-2. VAN WESTENDORP ANALYSIS: Based on comparable India market pricing data:
-   - Too cheap (triggers quality doubt): below ₹X
-   - Getting cheap (good value signal): ₹X
-   - Getting expensive (hesitation zone): ₹Y
-   - Too expensive (refusal): above ₹Z
+2. VAN WESTENDORP ANALYSIS: Based on comparable pricing data in the target market:
+   - Too cheap (triggers quality doubt): below X
+   - Getting cheap (good value signal): X
+   - Getting expensive (hesitation zone): Y
+   - Too expensive (refusal): above Z
 
 3. THE #1 PRICING MISTAKE: What specific error do most startups in this category make with pricing? How to avoid it.
 
 4. 3-TIER PRICING TABLE:
-   | Tier | Name | Price (INR/month) | Who it's for | Key features | Upgrade trigger |
+   | Tier | Name | Price (local currency / month) | Who it's for | Key features | Upgrade trigger |
    Free/Entry | Growth | Pro
 
-5. INDIA-SPECIFIC FACTORS: Annual billing discount, UPI conversion impact, BNPL effect on price sensitivity, regional variation.` }
+5. LOCAL FACTORS: Annual billing discount, impact of local payment methods on conversion, BNPL effect on price sensitivity, regional variation.` }
   ]
 },
 {
@@ -1967,7 +1968,7 @@ For each trend: What is it? What's driving it? How fast is it moving? What does 
 These are second-order trends — early signals that most market participants are ignoring because they seem distant or unlikely. For each: probability, timeline, and why smart players are already preparing.
 
 WHAT THE SMARTEST PLAYERS ARE DOING DIFFERENTLY:
-Name 2–3 specific companies (Indian or global) that are positioned ahead of the curve on these trends. What exactly are they doing? What can this startup learn?
+Name 2–3 specific companies (local or global) that are positioned ahead of the curve on these trends. What exactly are they doing? What can this startup learn?
 
 WHERE CAPITAL IS FLOWING:
 Recent funding rounds in adjacent spaces. M&A signals. IPO pipeline. What are investors betting on in this ecosystem?
@@ -2000,7 +2001,7 @@ These are questions where an enthusiastic but non-buying customer will say yes, 
 
 INTERVIEW FLOW: How to structure the 15 questions across a 30-minute session.
 
-INDIA-SPECIFIC ADAPTATIONS: Cultural dynamics that affect interview quality in India — saving face, hierarchical deference, joint family decision dynamics. How to compensate.` }
+LOCAL ADAPTATIONS: Cultural dynamics that affect interview quality in the target market (e.g. saving face, deference to hierarchy, family or group decision-making). How to compensate.` }
   ]
 },
 {
@@ -2009,16 +2010,16 @@ INDIA-SPECIFIC ADAPTATIONS: Cultural dynamics that affect interview quality in I
   desc:"8 channels scored on CAC, speed, scalability — with 30-day playbook.",
   prompts:[
     { id:"G7.1", title:"Growth Strategist Channel Scoring Prompt",
-      text:`ROLE: You are a Growth Strategist who has run go-to-market for 30+ product launches across India. You score every channel with brutal honesty and show your math.
+      text:`ROLE: You are a Growth Strategist who has run go-to-market for 30+ product launches across different markets. You score every channel with brutal honesty and show your math.
 
 ${prog()}
 
 Score the top 8 acquisition channels for this startup:
-| Channel | Cost efficiency (1–10) | Time to results (1–10) | Scalability (1–10) | Total | Estimated CAC (INR) | Notes |
+| Channel | Cost efficiency (1–10) | Time to results (1–10) | Scalability (1–10) | Total | Estimated CAC (local currency) | Notes |
 
 Channels to evaluate: SEO/Content, Paid Social (Meta), Paid Search (Google), LinkedIn Outreach, WhatsApp/Community, Referral/Word of Mouth, Partnerships/B2B, Offline/Events.
 
-Add India-specific channels where relevant: IndiaMart, ONDC, Regional YouTube, Meesho.
+Add channels specific to the target market where relevant (e.g. in India: IndiaMART, ONDC, regional-language YouTube, Meesho).
 
 RANKED LIST: Order by expected CAC with math shown for top 3.
 
@@ -2047,12 +2048,12 @@ STRUCTURE:
 - Q12: Open-ended — "If you could change one thing about how you currently handle [problem], what would it be?"
 
 For each question:
-- The exact question text (India-appropriate language)
+- The exact question text (in language that fits the target market)
 - Type: Multiple choice / Slider / Open text
 - What insight it produces
 - The specific cognitive bias it might trigger and how the question design minimises it
 
-DISTRIBUTION PLAN: 5 specific India communities to share this in (with approach method)
+DISTRIBUTION PLAN: 5 specific communities in the target market to share this in (with approach method)
 SAMPLE SIZE: For 95% confidence at ±10% margin, you need X responses.
 EXPECTED COMPLETION TIME: Under X minutes.
 KILL CRITERION: If fewer than X% of respondents report this problem as a frequent pain, the demand assumption fails.` }
@@ -2103,16 +2104,16 @@ Profitability of incumbents | |
 Competitive intensity | |
 Customer accessibility | |
 Regulatory environment | |
-India infrastructure readiness | |
+Local infrastructure readiness | |
 
 RIGHT TO WIN [X/10]: Honest assessment — does this team, with this product, at this funding level, have a genuine right to win in this market? What would need to be true?
 
 TOP 3 BARRIERS TO ENTRY:
-For each: nature of the barrier, estimated cost in INR to overcome it, timeline, and whether it gets easier or harder over time.
+For each: nature of the barrier, estimated cost (local currency) to overcome it, timeline, and whether it gets easier or harder over time.
 
 CAPABILITIES GAPS: What partnerships or capabilities does this startup need that it doesn't currently have?
 
-BREAK-EVEN TIMELINE: Realistic (not best-case) months to break-even with ₹X, ₹Y, ₹Z investment.
+BREAK-EVEN TIMELINE: Realistic (not best-case) months to break-even with X, Y, Z investment.
 
 KILL CRITERIA: What specific signals — by what dates — should trigger a market exit or fundamental pivot?
 
@@ -2141,7 +2142,7 @@ For each option:
 - One-liner version: Under 10 words. Homepage hero text.
 
 RECOMMENDATION: Which one to bet money on — and why?
-India adaptation: How does the winning statement need to change for a Hindi or regional language version?` }
+Local-language adaptation: How does the winning statement need to change for a version in the target market's main local language(s)?` }
   ]
 },
 {
@@ -2166,7 +2167,7 @@ Why would a customer choose this solution over their current workaround? What sp
 WILLINGNESS TO PAY:
 What alternatives compete at the proposed price point? Is there evidence of actual payment (not survey intent to pay) at this level?
 
-7-DAY VALIDATION EXPERIMENT (under ₹40,000 / $500):
+7-DAY VALIDATION EXPERIMENT (under $500 or the local equivalent):
 Design the minimum experiment to get ACTUAL BUYING SIGNALS (not surveys):
 - Day 1–2: Setup
 - Day 3–5: Run
@@ -2186,7 +2187,7 @@ NOT: "we didn't get enough signups." SPECIFIC: fewer than X people took action Y
   desc:"Compiled narrative with Go/Pivot/Stop verdict. Generated LAST after all sections complete.",
   prompts:[
     { id:"A1.1", title:"Executive Summary & Verdict",
-      text:`You are a Senior Associate at a Tier 1 Indian VC fund. You have just completed a full due diligence process on this startup using every section of research in progressive.md. It is time to write the investment committee memo.
+      text:`You are a Senior Associate at a top-tier VC fund that invests in the founder's target market. You have just completed a full due diligence process on this startup using every section of research in progressive.md. It is time to write the investment committee memo.
 
 ${prog()}
 
@@ -2300,7 +2301,7 @@ function selectSection(code) {
 function setNav(open) { document.getElementById('app').classList.toggle('nav-open', open); }
 
 function badgeHtml(b) {
-  const map = { new:['badge-new','+ NEW'], unique:['badge-unique','UNIQUE'], india:['badge-india','INDIA'], standard:['badge-standard','STANDARD'], prompt:['badge-prompt','AI PROMPT'] };
+  const map = { new:['badge-new','+ NEW'], unique:['badge-unique','UNIQUE'], local:['badge-local','LOCAL'], standard:['badge-standard','STANDARD'], prompt:['badge-prompt','AI PROMPT'] };
   const [cls, label] = map[b] || map.standard;
   return `<span class="badge ${cls}">${label}</span>`;
 }
