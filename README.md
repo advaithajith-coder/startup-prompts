@@ -2,7 +2,9 @@
 
 A single-page library of **69 AI prompts in 52 sections** that walks a startup idea from problem framing to a final go / no-go verdict. It's written with Indian founders in mind: city tiers, the informal market, UPI and BNPL, Indian legal and compliance rules, and Indian funding sources. Most prompts still work for other markets.
 
-Open `index.html` in any browser. You don't need to install anything, and nothing is sent anywhere.
+**Live site: https://startup-prompts.vercel.app/**
+
+You can also open `index.html` in any browser. You don't need to install anything, and nothing is sent anywhere.
 
 ## What's inside
 
